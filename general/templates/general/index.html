@@ -1,44 +1,19 @@
-<!DOCTYPE html>
+{% extends "base/base.html" %}
 {% load static %}
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Group Fund Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'general/css/styles.css' %}">
-  </head>
-  <body>
-    <div class="center-container">
-      <div class="login-box">
-        <div class="text-center mb-8">
-          <svg class="logo" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <h1 class="title">WBM ZION TEACHING WELFARE</h1>
-          <p class="subtitle">Sign in to continue</p>
-        </div>
-        <form class="space-y-6">
-          <div>
-            <label class="form-label" for="username">Username</label>
-            <input autocomplete="username" class="form-input" id="username" name="username" placeholder="Enter your username" required type="text"/>
-          </div>
-          <div>
-            <div class="flex-between">
-              <label class="form-label" for="password">Password</label>
-              <a class="forgot-link" href="#">Forgot password?</a>
-            </div>
-            <input autocomplete="current-password" class="form-input" id="password" name="password" placeholder="Enter your password" required type="password"/>
-          </div>
-          <div>
-            <button class="login-btn" type="submit">Login</button>
-          </div>
-        </form>
-        <p class="mt-10 text-center text-muted">
-          Not a member?
-          <a class="signup-link" href="#">Create an account</a>
-        </p>
-      </div>
+
+{% block content %}
+<div class="center-container">
+  <div class="login-box">
+    <div class="text-center mb-8">
+       <img src= {% static "base/images/wbm-logo4.png" %} alt="logo" width=200>
+      <h1 class="title">Welcome To</h1>
+      <h3 class="subtitle">WBM ZION TEACHING WELFARE</h3>
     </div>
-  </body>
-</html>
+    <form class="space-y-6">
+      <div>
+        <button class="login-btn" type="submit">Get Started</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
