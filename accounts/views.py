@@ -14,7 +14,7 @@ def login_view(request):
             return redirect('home')  # Change 'home' to your desired redirect
         else:
             messages.error(request, 'Invalid username or password.')
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/loginform.html')
 
 def logout_view(request):
     logout(request)

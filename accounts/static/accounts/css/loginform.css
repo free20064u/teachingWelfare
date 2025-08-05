@@ -126,4 +126,6 @@ body {
   text-decoration: none;
   transition: color 0.2s;
 }
-.signup-link:hover
+.signup-link:hover {
+  color: #a084e8;
+}
