@@ -1,44 +1,30 @@
+{% extends "base/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Group Fund Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'accounts/css/loginform.css' %}">
-  </head>
-  <body>
-    <div class="center-container">
-      <div class="login-box">
-        <div class="text-center mb-8">
-          <svg class="logo" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <h1 class="title">Welcome to Group Fund</h1>
-          <p class="subtitle">Sign in to continue</p>
-        </div>
-        <form class="space-y-6">
-          <div>
-            <label class="form-label" for="username">Username</label>
-            <input autocomplete="username" class="form-input" id="username" name="username" placeholder="Enter your username" required type="text"/>
-          </div>
-          <div>
-            <div class="flex-between">
-              <label class="form-label" for="password">Password</label>
-              <a class="forgot-link" href="#">Forgot password?</a>
-            </div>
-            <input autocomplete="current-password" class="form-input" id="password" name="password" placeholder="Enter your password" required type="password"/>
-          </div>
-          <div>
-            <button class="login-btn" type="submit">Login</button>
-          </div>
-        </form>
-        <p class="mt-10 text-center text-muted">
-          Not a member?
-          <a class="signup-link" href="#">Create an account</a>
-        </p>
-      </div>
+
+
+{% block content %}
+<div class="container pb-3">
+  <div>
+    <div class="text-center">
+       <img src= {% static "base/images/wbm-logo4.png" %} alt="logo" width=200>
+      <h1 class="title">Login</h1>
+      
     </div>
-  </body>
-</html>
+    <form class="text-center my-4" method="post">
+      {% csrf_token %}
+      <input type="email" class="form-control mb-4" name="" id="" placeholder="Email">
+      <input type="password" class="form-control mb-4" name="" id="" placeholder="password">
+      <div>
+        <button class="btn btn-primary btn-lg rounded-pill col-10 col-sm-4 mb-2" type="button">Login</button>
+      </div>
+    </form>
+    <div class="text-center">
+      <a href="http://" class="text-decoration-none text-muted" >Forgot password</a>
+      <p class="my-3 text-center">&copy; {{ year|default:2024 }} Teaching Welfare <br>designed by alphy</br></p>
+    </div>
+    
+    
+    
+  </div>
+</div>
+{% endblock %}

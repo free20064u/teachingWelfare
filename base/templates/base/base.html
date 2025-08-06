@@ -1,33 +1,84 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Group Fund Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'base/css/base.css' %}"/>
+    <meta charset="UTF-8">
+    <title>{% block title %}Teaching Welfare{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static "bootstrap/css/custom-bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "fontawsome/all.min.css" %}">
+    {% block extra_head %}
+    <!-- Add extra head content here -->
+    {% endblock %}
 </head>
-<body>
+<body class="bg-secondary">
     <header>
-        {% block header %}
-            
-        {% endblock %}
+        {% if navbar %}
+        <!-- Navigation bar goes here -->
+         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            </nav>
+        {% endif %}
+        
     </header>
-    <nav>
-        {% block nav %}
-        {% endblock %}
-    </nav>
-    <main>
+    <main class="pb-5 mb-5">
         {% block content %}
+        <!-- Page content goes here -->
         {% endblock %}
     </main>
-    <footer class="text-center">
-        {% block footer %}
-        &copy; {{ year|default:2024 }} Teaching Welfare
-        {% endblock %}
+    <footer class='text-center bg-primary fixed-bottom text-white'>
+        <div class="row d-flex">
+            <div class="col-3">
+                <i class="fa-solid fa-house"></i>
+                <p class="mb-1">home</p></div>
+            <div class="col-3">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <p class="mb-1">fund</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-user"></i>
+                <p class="mb-1">profile</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-gear"></i>
+                <p class="mb-1">setting</p>
+            </div>
+        </div>
     </footer>
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     {% block extra_scripts %}
+    <!-- Extra scripts -->
     {% endblock %}
 </body>
 </html>

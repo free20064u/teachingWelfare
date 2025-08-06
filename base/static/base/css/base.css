@@ -5,6 +5,7 @@
   --text-muted: #6E6388;
   --background-light: #F2F0F4;
 }
+
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background: var(--secondary-cream);
