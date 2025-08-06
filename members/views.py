@@ -6,3 +6,11 @@ def dashboardView(request):
         'navbar':True,
     }
     return render(request, 'members/dashboard.html', context)
+
+
+def benefitView(request):
+    context = {}
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, 'members/benefit.html', context)
