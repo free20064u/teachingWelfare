@@ -1,0 +1,23 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+    <div class="text-center">
+        <h5 class="text-center my-3">Benefit Request</h5>
+    </div>
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div class="text-center mt-4">
+                <a href="{% url 'benefit' %}" class="btn btn-primary rounded-pill">Submit Request</a>
+            </div>
+        </form>
+    </div>
+    
+    
+    
+</div>
+{% endblock %}
