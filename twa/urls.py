@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('members/', include('members.urls')),
     path('master/', include('master.urls')),
+    path('finance/', include('finance.urls')),
     #re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     #re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]#+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
