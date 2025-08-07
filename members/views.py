@@ -19,3 +19,8 @@ def benefitView(request):
         pass
     else:
         return render(request, 'members/benefit.html', context)
+
+
+def benefitListView(request):
+    context = {}
+    return render(request, 'members/benefitList.html', context)
