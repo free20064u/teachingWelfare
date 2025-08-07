@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('general.urls')),
     path('accounts/', include('accounts.urls')),
     path('members/', include('members.urls')),
-    #path('extraction/', include('extraction.urls')),
+    path('master/', include('master.urls')),
     #re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     #re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]#+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
