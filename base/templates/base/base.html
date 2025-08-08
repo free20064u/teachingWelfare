@@ -18,7 +18,7 @@
         <!-- Navigation bar goes here -->
          <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" href="#">TWA</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -44,6 +44,9 @@
                     <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                     </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url "logout" %}">Logout</a>
+                    </li>
                 </ul>
                 </div>
             </div>
@@ -60,8 +63,27 @@
         <!-- Page content goes here -->
         {% endblock %}
     </main>
+    {% if request.user.is_authenticated %}
+    
     <footer class='text-center bg-primary fixed-bottom text-white'>
         <div class="row d-flex">
+            {% if request.user.category == 'admin' %}
+                <div class="col-3">
+                <i class="fa-solid fa-house"></i>
+                <p class="mb-1">Home</p></div>
+            <div class="col-3">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <p class="mb-1">Members</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-user"></i>
+                <p class="mb-1">Report</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-gear"></i>
+                <p class="mb-1">Setting</p>
+            </div>
+            {% elif request.user.category == 'chairperson  n' %}
             <div class="col-3">
                 <i class="fa-solid fa-house"></i>
                 <p class="mb-1">home</p></div>
@@ -77,8 +99,63 @@
                 <i class="fa-solid fa-gear"></i>
                 <p class="mb-1">setting</p>
             </div>
+            {% elif request.user.category == 'secretary' %}
+            <div class="col-3">
+                <i class="fa-solid fa-house"></i>
+                <p class="mb-1">Home</p></div>
+            <div class="col-3">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <p class="mb-1">Members</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-user"></i>
+                <p class="mb-1">Report</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-gear"></i>
+                <p class="mb-1">Setting</p>
+            </div>
+            {% elif request.user.category == 'finance' %}
+            <div class="col-3">
+                <i class="fa-solid fa-house"></i>
+                <p class="mb-1">Home</p></div>
+            <div class="col-3">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <p class="mb-1">Members</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-user"></i>
+                <p class="mb-1">Report</p>
+            </div>
+            <div class="col-3">
+                <i class="fa-solid fa-gear"></i>
+                <p class="mb-1">Setting</p>
+            </div>
+            {% else %}
+            <div class="col-3">
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-house"></i>Home
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="" class="btn btn-primary">
+                    <i class="fa-solid fa-piggy-bank"></i>Fund
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="" class="btn btn-primary">
+                    <i class="fa-solid fa-user"></i>Profile
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="" class="btn btn-primary">
+                    <i class="fa-solid fa-gear"></i>Settings
+                </a>
+            </div>
+            {% endif %}   
         </div>
     </footer>
+    {% endif %}
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     {% block extra_scripts %}
