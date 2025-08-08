@@ -19,7 +19,8 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
-    
+
+
 class Region(models.Model):
     name = models.CharField(max_length=30, blank=True)
 
@@ -41,7 +42,6 @@ class Gender(models.Model):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    serial_number = models.CharField(max_length=30, blank=True, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     middle_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
@@ -57,7 +57,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name','last_name']
 
     objects = CustomUserManager()
 
