@@ -7,8 +7,8 @@
     <div class="text-center">
         <h5 class="text-center my-3">Dashboard</h5>
         <img src= {% static "base/images/wbm-logo4.png" %} alt="logo" width=100>
-        <p class="mb-0 text-muted">Maxwel Asare Nyamekye</p>
-        <p class="mt-0 text-muted">ID: 12345</p>
+        <p class="mb-0 text-muted">{{request.user.first_name}} {{request.user.middle_name}} {{ request.user.last_name}} </p>
+        <p class="mt-0 text-muted">ID: TWA {{request.user.id|stringformat:'04d'}} </p>
     </div>
     <div>
         <h6>Fund Details</h6>

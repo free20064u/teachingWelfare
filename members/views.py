@@ -4,6 +4,7 @@ from .forms import BenefitForm
 
 # Create your views here.
 def dashboardView(request):
+    member = request.user
     context = {
         
         'navbar':True,
