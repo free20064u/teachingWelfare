@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm, EditUserForm
 
 # Create your views here.
 def login_view(request):
@@ -40,3 +40,14 @@ def registerView(request):
             return render(request, 'accounts/register.html', context)
     else:
         return render(request, 'accounts/register.html', context)
+
+
+def editUserView(request):
+    
+    context = {
+        'form': EditUserForm(),
+    }
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, 'accounts/editUserForm.html', context)

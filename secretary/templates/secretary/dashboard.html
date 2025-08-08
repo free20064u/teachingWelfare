@@ -7,11 +7,19 @@
     <div class="text-center">
         <h5 class="text-center my-3">Dashboard</h5>
     </div>
-    <div class="col-6 my-3">
+    <div class="row d-flex">
+        <div class="col-6 my-3">
         <a href="{% url "register" %}">
             <button class="btn btn-primary rounded-pill">Add Member</button>
         </a>
     </div>
+    <div class="col-6 my-3">
+        <a href="{% url "edit_user" %}">
+            <button class="btn btn-primary rounded-pill">Edit Member</button>
+        </a>
+    </div>
+    </div>
+    
     <div>
         <h6>Upcoming Events</h6> 
         <div>
