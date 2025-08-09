@@ -69,6 +69,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     home_town = models.CharField(max_length=30, blank=True)
+    house_number = models.CharField(max_length=30, blank=True)
     region = models.CharField(max_length=2,choices=REGION, blank=True)
     gender = models.CharField(max_length=1,choices=GENDER, blank=True)
     marital_status = models.CharField(max_length=1,choices=MARITAL_STATUS, blank=True)

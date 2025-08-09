@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="container">
+    <div class="text-center">
+        <h5 class="text-center my-3">Personal Information</h5>
+    </div>
+    <h6>Personal Details</h6>
+    <p class="text-muted mb-0">Full Name</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.first_name }} {{ request.user.middle_name }} {{ request.user.last_name }}</p>
+    <h5>Updates</h5>
+    <div class="row">
+        <a class="text-decoration-none" href="">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Children<br><span class="text-muted">Add Children</span></p>
+        </a>
+        <a class="text-decoration-none" href="">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Spouse<br><span class="text-muted">Add Spouse</span></p>
+        </a>
+        <a class="text-decoration-none" href="{% url "edit_profile" %}">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Personal<br><span class="text-muted">Edit Info</span></p>
+        </a>
+    </div>
+</div>
+{% endblock %}
