@@ -22,12 +22,13 @@ class EditProfileForm(forms.ModelForm):
     #password = forms.CharField(widget=forms.HiddenInput())
     class Meta:
         model =  CustomUser
-        fields = ['first_name', 'middle_name', 'last_name','phone_number', 'email','category','gender','marital_status','region','home_town','house_number']
+        fields = ['first_name', 'middle_name', 'last_name','date_of_birth','phone_number', 'email','category','gender','marital_status','region','home_town','house_number']
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'First Name'}),
             'middle_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Middle Name'}),
             'last_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Last Name'}),
+            'date_of_birth': forms.DateInput(attrs={'class':'form-control shadow', 'placeholder':'Last Name', 'type':'date'}),
             'phone_number': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Phone number'}),
             'email': forms.EmailInput(attrs={'class':'form-control shadow', 'placeholder':'Email'}),
             'category': forms.Select(attrs={'class':'form-control shadow'}),

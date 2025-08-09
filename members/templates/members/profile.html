@@ -10,6 +10,38 @@
     <h6>Personal Details</h6>
     <p class="text-muted mb-0">Full Name</p>
     <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.first_name }} {{ request.user.middle_name }} {{ request.user.last_name }}</p>
+    <p class="text-muted mb-0">Email</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.email }}</p>
+    <div class="row d-flex">
+        <div class="col-6">
+            <p class="text-muted mb-0">Date Of Birth</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.date_of_birth }} </p>
+        </div>
+        <div class="col-6">
+            <p class="text-muted mb-0">Gender</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.gender }} </p>
+        </div>
+    </div>
+    <div class="row d-flex">
+        <div class="col-6">
+            <p class="text-muted mb-0">Phone</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.phone_number }} </p>
+        </div>
+        <div class="col-6">
+            <p class="text-muted mb-0">Region</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.region }} </p>
+        </div>
+    </div>
+    <div class="row d-flex">
+        <div class="col-6">
+            <p class="text-muted mb-0">Home Town</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.home_town }} </p>
+        </div>
+        <div class="col-6">
+            <p class="text-muted mb-0">House Number</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.house_number }} </p>
+        </div>
+    </div>
     <h5>Updates</h5>
     <div class="row">
         <a class="text-decoration-none" href="">
