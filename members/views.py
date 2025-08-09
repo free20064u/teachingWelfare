@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 
-from .forms import BenefitForm, EditProfileForm
+from .forms import BenefitForm, EditProfileForm, SpouseForm
+from .models import Children, NextOfKin, Parent, Spouse
 
 
 # Create your views here.
@@ -29,7 +30,13 @@ def benefitListView(request):
 
 
 def profileView(request):
-    context = {}
+    context = {
+        'spouse':Spouse.objects.get(member=request.user),
+        'children':Children.objects.filter(member=request.user),
+        'parent':Parent.objects.filter(member=request.user),
+        'next_of_kin':NextOfKin.objects.filter(member=request.user),
+    }
+    
     return render(request, 'members/profile.html', context)
 
 def editProfileView(request):
@@ -47,3 +54,18 @@ def editProfileView(request):
             return render(request, 'members/editProfile.html', context)    
     else:
         return render(request, 'members/editProfile.html', context)
+
+    
+def spouseView(request):
+    context = {
+        'form': SpouseForm(initial={'member':request.user })
+    }
+    if request.method == 'POST':
+        form = SpouseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            return render(request, 'members/spouse.html', context)  
+    else:
+        return render(request, 'members/spouse.html', context)

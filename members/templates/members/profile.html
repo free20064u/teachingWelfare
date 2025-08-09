@@ -42,12 +42,51 @@
             <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.house_number }} </p>
         </div>
     </div>
+    <h6>Spouse Details</h6>
+    <p class="text-muted mb-0">Full Name</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ spouse.first_name }} {{ spouse.middle_name }} {{ spouse.last_name }}</p>
+    <div class="row d-flex">
+        <div class="col-6">
+            <p class="text-muted mb-0">Phone number</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ spouse.phone_number }} </p>
+        </div>
+        <div class="col-6">
+            <p class="text-muted mb-0">House Number</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ spouse.house_number }} </p>
+        </div>
+    </div>
+
+    <h6>Children's Details</h6>
+    <p class="text-muted mb-0">Full Name</p>
+    {% for child in children %}
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ child.first_name }} {{ child.middle_name }} {{ child.last_name }}</p>
+    {% endfor %}
+
+    <h6>Parent's Details</h6>
+    <p class="text-muted mb-0">Full Name</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ parent.fathers_first_name }} {{ parent.fathers_middle_name }} {{ parent.fathers_last_name }}</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ parent.mothers_first_name }} {{ parent.mothers_middle_name }} {{ parent.mothers_last_name }}</p>
+
+    <h6>Next Of Kin</h6>
+    <p class="text-muted mb-0">Full Name</p>
+    <p class="bg-light bg-opacity-50 rounded p-2">{{ next_of_kin.first_name }} {{ next_of_kin.middle_name }} {{ next_of_kin.last_name }}</p>
+    <div class="row d-flex">
+        <div class="col-6">
+            <p class="text-muted mb-0">Phone number</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ next_of_kin.phone_number }} </p>
+        </div>
+        <div class="col-6">
+            <p class="text-muted mb-0">House Number</p>
+            <p class="bg-light bg-opacity-50 rounded p-2">{{ next_of_kin.house_number }} </p>
+        </div>
+    </div>
+
     <h5>Updates</h5>
     <div class="row">
         <a class="text-decoration-none" href="">
             <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Children<br><span class="text-muted">Add Children</span></p>
         </a>
-        <a class="text-decoration-none" href="">
+        <a class="text-decoration-none" href="{% url "spouse" %}">
             <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Spouse<br><span class="text-muted">Add Spouse</span></p>
         </a>
         <a class="text-decoration-none" href="{% url "edit_profile" %}">
