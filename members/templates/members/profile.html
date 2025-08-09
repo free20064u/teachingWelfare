@@ -67,6 +67,7 @@
     <p class="bg-light bg-opacity-50 rounded p-2">{{ parent.fathers_first_name }} {{ parent.fathers_middle_name }} {{ parent.fathers_last_name }}</p>
     <p class="bg-light bg-opacity-50 rounded p-2">{{ parent.mothers_first_name }} {{ parent.mothers_middle_name }} {{ parent.mothers_last_name }}</p>
 
+
     <h6>Next Of Kin</h6>
     <p class="text-muted mb-0">Full Name</p>
     <p class="bg-light bg-opacity-50 rounded p-2">{{ next_of_kin.first_name }} {{ next_of_kin.middle_name }} {{ next_of_kin.last_name }}</p>
@@ -83,7 +84,8 @@
 
     <h5>Updates</h5>
     <div class="row">
-        <a class="text-decoration-none" href="{% url "children" %}">
+        <div class="col-6">
+            <a class="text-decoration-none" href="{% url "children" %}">
             <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Children<br><span class="text-muted">Add Children</span></p>
         </a>
         <a class="text-decoration-none" href="{% url "spouse" %}">
@@ -92,6 +94,18 @@
         <a class="text-decoration-none" href="{% url "edit_profile" %}">
             <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Personal<br><span class="text-muted">Edit Info</span></p>
         </a>
+        </div>
+        <div class="col-6">
+            <a class="text-decoration-none" href="{% url "parent" %}">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Parent<br><span class="text-muted">Add parent</span></p>
+        </a>
+        <a class="text-decoration-none" href="{% url "Next_of_kin" %}">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Next Of Kin<br><span class="text-muted">Edit Info</span></p>
+        </a>
+        <a class="text-decoration-none" href="{% url "edit_profile" %}">
+            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Personal<br><span class="text-muted">Edit Info</span></p>
+        </a>
+        </div>
     </div>
 </div>
 {% endblock %}

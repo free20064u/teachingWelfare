@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from .forms import BenefitForm, ChildrenForm, EditProfileForm, SpouseForm
+from .forms import BenefitForm, ChildrenForm, EditProfileForm, ParentForm, SpouseForm
 from .models import Children, NextOfKin, Parent, Spouse
 
 
@@ -30,11 +30,26 @@ def benefitListView(request):
 
 
 def profileView(request):
+    try:
+        spouse = Spouse.objects.get(member=request.user)
+    except:
+        spouse = None
+    
+    try:
+        parent = Parent.objects.get(member=request.user)
+    except:
+        parent = None
+
+    try:
+        next_of_kin = NextOfKin.objects.get(member=request.user)
+    except:
+        next_of_kin = None
+
     context = {
-        'spouse':Spouse.objects.get(member=request.user),
+        'spouse': spouse,
         'children':Children.objects.filter(member=request.user),
-        'parent':Parent.objects.filter(member=request.user),
-        'next_of_kin':NextOfKin.objects.filter(member=request.user),
+        'parent':parent,
+        'next_of_kin':next_of_kin,
     }
     
     return render(request, 'members/profile.html', context)
@@ -77,6 +92,19 @@ def childrenView(request):
     }
     if request.method == 'POST':
         form = ChildrenForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        return render(request, 'members/children.html', context)
+    
+
+def parentView(request):
+    context = {
+        'form': ParentForm(initial={'member': request.user}),
+    }
+    if request.method == 'POST':
+        form = ParentForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('profile')

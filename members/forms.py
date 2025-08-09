@@ -96,5 +96,5 @@ class ParentForm(forms.ModelForm):
             'mothers_middle_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Middle Name'}),
             'mothers_last_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Last Name'}),
             
-            'member': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'House number'}),
+            'member': forms.HiddenInput(),
         }
