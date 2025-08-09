@@ -10,4 +10,5 @@ urlpatterns = [
     path('spouse/', views.spouseView, name='spouse'),
     path('children/', views.childrenView, name='children'),
     path('parent/', views.parentView, name='parent'),
+    path('next_of_kin/', views.nextOfKinView, name='next_of_kin'),
 ]

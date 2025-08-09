@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from .forms import BenefitForm, ChildrenForm, EditProfileForm, ParentForm, SpouseForm
+from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, SpouseForm
 from .models import Children, NextOfKin, Parent, Spouse
 
 
@@ -110,3 +110,16 @@ def parentView(request):
             return redirect('profile')
     else:
         return render(request, 'members/children.html', context)
+
+
+def nextOfKinView(request):
+    context = {
+        'form': NextOfKinForm(initial={'member': request.user}),
+    }
+    if request.method == 'POST':
+        form = NextOfKinForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        return render(request, 'members/nextOfKin.html', context)

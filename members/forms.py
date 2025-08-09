@@ -79,7 +79,7 @@ class NextOfKinForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Last Name'}),
             'phone_number': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'Phone number'}),
             'house_number': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'House number'}),
-            'member': forms.TextInput(attrs={'class':'form-control shadow', 'placeholder':'House number'}),
+            'member': forms.HiddenInput(),
         }
 
 
