@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="text-center mb-4">
+        <h4 class="fw-bold">Members List</h4>
+    </div>
+
+    <!-- Search Form -->
+    <form method="get" action="{% url 'members_list' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Search by name or email..."
+                value="{{ query|default:'' }}">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="list-group shadow-sm">
+        {% for member in members %}
+            <a href="{% url 'member_detail' member.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-1">{{ member.get_full_name|default:member.email }}</h6>
+                    <small class="text-muted">{{ member.get_category_display|default:"Member" }}</small>
+                </div>
+                <i class="fas fa-chevron-right text-muted"></i>
+            </a>
+        {% empty %}
+            <div class="list-group-item text-center text-muted p-4">
+                {% if query %}
+                    <p class="mb-0">No members found matching your search for "<strong>{{ query }}</strong>".</p>
+                {% else %}
+                    <p class="mb-0">No members found.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if members.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if members.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ members.previous_page_number }}{% if query %}&amp;q={{ query }}{% endif %}" aria-label="Previous">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                </li>
+            {% endif %}
+
+            {% for i in members.paginator.page_range %}
+                <li class="page-item {% if members.number == i %}active{% endif %}" {% if members.number == i %}aria-current="page"{% endif %}>
+                    <a class="page-link" href="?page={{ i }}{% if query %}&amp;q={{ query }}{% endif %}">{{ i }}</a>
+                </li>
+            {% endfor %}
+
+            {% if members.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ members.next_page_number }}{% if query %}&amp;q={{ query }}{% endif %}" aria-label="Next">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,155 +1,230 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Teaching Welfare{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static "bootstrap/css/custom-bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "fontawsome/all.min.css" %}">
+
+    {# Block for extra head content from child templates #}
     {% block extra_head %}
     <!-- Add extra head content here -->
     {% endblock %}
 </head>
+
 <body class="bg-secondary">
+
     <header>
+        {# Conditionally display a full navbar or a simple back button #}
         {% if navbar %}
-        <!-- Navigation bar goes here -->
-         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Main Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">TWA</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "logout" %}">Logout</a>
+                        </li>
                     </ul>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="{% url "logout" %}">Logout</a>
-                    </li>
-                </ul>
                 </div>
             </div>
-            </nav>
+        </nav>
         {% else %}
-            <button class="btn btn-primary">
-                <i class="fa-solid fa-arrow">back</i>
-            </button>
+        <!-- Simple Back Button -->
+        <button class="btn btn-primary m-2" onclick="window.history.back();">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </button>
         {% endif %}
-        
     </header>
+
     <main class="pb-5 mb-5">
+        {# Main content block for child templates #}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block content %}
         <!-- Page content goes here -->
         {% endblock %}
     </main>
+
+    {# Footer navigation, shown only to authenticated users #}
     {% if request.user.is_authenticated %}
-    
-    <footer class='text-center bg-primary fixed-bottom text-white'>
+    <footer class='text-center bg-primary fixed-bottom text-white py-2'>
         <div class="row d-flex">
             {% if request.user.category == 'admin' %}
-                <div class="col-3">
-                <i class="fa-solid fa-house"></i>
-                <p class="mb-1">Home</p></div>
             <div class="col-3">
-                <i class="fa-solid fa-piggy-bank"></i>
-                <p class="mb-1">Members</p>
+                {# TODO: Create an 'admin_dashboard' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-user"></i>
-                <p class="mb-1">Report</p>
+                <a href="{% url 'members_list' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-users"></i>
+                    <p class="mb-0 small">Members</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-gear"></i>
-                <p class="mb-1">Setting</p>
-            </div>
-            {% elif request.user.category == 'chairperson  n' %}
-            <div class="col-3">
-                <i class="fa-solid fa-house"></i>
-                <p class="mb-1">home</p></div>
-            <div class="col-3">
-                <i class="fa-solid fa-piggy-bank"></i>
-                <p class="mb-1">fund</p>
+                {# TODO: Create an 'admin_reports' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <p class="mb-0 small">Report</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-user"></i>
-                <p class="mb-1">profile</p>
+                {# TODO: Create an 'admin_settings' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Setting</p>
+                </a>
+            </div>
+            {% elif request.user.category == 'chairperson' %}
+            <div class="col-3">
+                {# TODO: Create a 'chairperson_dashboard' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-gear"></i>
-                <p class="mb-1">setting</p>
+                {# TODO: Create a 'fund_overview' URL for chairperson #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                    <p class="mb-0 small">Fund</p>
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="{% url 'profile' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-user"></i>
+                    <p class="mb-0 small">Profile</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Create a 'chairperson_settings' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Setting</p>
+                </a>
             </div>
             {% elif request.user.category == 'secretary' %}
             <div class="col-3">
-                <i class="fa-solid fa-house"></i>
-                <p class="mb-1">Home</p></div>
-            <div class="col-3">
-                <i class="fa-solid fa-piggy-bank"></i>
-                <p class="mb-1">Members</p>
+                <a href="{% url 'secretary_dashboard' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-user"></i>
-                <p class="mb-1">Report</p>
+                <a href="{% url 'members_list' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-users"></i>
+                    <p class="mb-0 small">Members</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-gear"></i>
-                <p class="mb-1">Setting</p>
+                {# TODO: Replace '#' with the actual URL name for reports #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <p class="mb-0 small">Report</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Replace '#' with the actual URL name for settings #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Setting</p>
+                </a>
             </div>
             {% elif request.user.category == 'finance' %}
             <div class="col-3">
-                <i class="fa-solid fa-house"></i>
-                <p class="mb-1">Home</p></div>
-            <div class="col-3">
-                <i class="fa-solid fa-piggy-bank"></i>
-                <p class="mb-1">Members</p>
+                <a href="{% url 'finance:finance_dashboard' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-user"></i>
-                <p class="mb-1">Report</p>
+                <a href="{% url 'finance:finance_members_list' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-users"></i>
+                    <p class="mb-0 small">Members</p>
+                </a>
             </div>
             <div class="col-3">
-                <i class="fa-solid fa-gear"></i>
-                <p class="mb-1">Setting</p>
+                {# TODO: Create a 'finance_report' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <p class="mb-0 small">Report</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Create a 'finance_settings' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Setting</p>
+                </a>
             </div>
             {% else %}
             <div class="col-3">
-                <a href="{% url 'dashboard' %}" class="btn btn-primary">
-                    <i class="fa-solid fa-house"></i>Home
+                <a href="{% url 'dashboard' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
                 </a>
             </div>
             <div class="col-3">
-                <a href="" class="btn btn-primary">
-                    <i class="fa-solid fa-piggy-bank"></i>Fund
+                {# TODO: Create a 'fund_details' URL for members #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                    <p class="mb-0 small">Fund</p>
                 </a>
             </div>
             <div class="col-3">
-                <a href="{% url "profile" %}" class="btn btn-primary">
-                    <i class="fa-solid fa-user"></i>Profile
+                <a href="{% url 'profile' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-user"></i>
+                    <p class="mb-0 small">Profile</p>
                 </a>
             </div>
             <div class="col-3">
-                <a href="" class="btn btn-primary">
-                    <i class="fa-solid fa-gear"></i>Settings
+                {# TODO: Create a 'settings' URL for members #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Settings</p>
                 </a>
             </div>
             {% endif %}   

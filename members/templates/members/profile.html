@@ -56,15 +56,19 @@
         </div>
     </div>
 
+    {# Children's Details Section - Loops through children or shows a message #}
     <h6>Children's Details</h6>
-    <p class="text-muted mb-0">Full Name</p>
-    {% for child in children %}
-    
-    <div class="bg-light bg-opacity-50 mb-2 p-1 rounded d-flex justify-content-between align-items-center">
-        <button type="button" class="btn  m-0  col-9 text-start">{{ child.first_name }} {{ child.middle_name }} {{ child.last_name }}</button>
-        <button type="button" class="btn m-0  col-2 text-end"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    {% endfor %}
+    <ul class="list-group mb-3">
+        {% for child in children %}
+         <li class="list-group-item d-flex justify-content-between align-items-center bg-light bg-opacity-50">
+            <span>{{ child.first_name }} {{ child.middle_name|default:"" }} {{ child.last_name|default:"" }}</span>
+            {# This link should point to a view that handles deleting a child record #}
+            <a href="#" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i></a>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted bg-light bg-opacity-50">No children details provided.</li>
+        {% endfor %}
+    </ul>
 
     <h6>Parent's Details</h6>
     <p class="text-muted mb-0">Full Name</p>
@@ -86,30 +90,44 @@
         </div>
     </div>
 
-    <h5>Updates</h5>
-    <div class="row">
-        <div class="col-6">
-            <a class="text-decoration-none" href="{% url "children" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Children<br><span class="text-muted">Add Children</span></p>
+    {# Section with links to edit or add related information #}
+    <h5 class="mt-4">Updates</h5>
+    <div class="list-group">
+        <a href="{% url 'edit_profile' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Personal Details</h6>
+                <small class="text-muted">Edit your personal information.</small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </a>
-        <a class="text-decoration-none" href="{% url "spouse" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Spouse<br><span class="text-muted">Add Spouse</span></p>
+        <a href="{% url 'spouse' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Spouse Details</h6>
+                <small class="text-muted">Add or update spouse information.</small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </a>
-        <a class="text-decoration-none" href="{% url "edit_profile" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Personal<br><span class="text-muted">Edit Info</span></p>
+        <a href="{% url 'children' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Children Details</h6>
+                <small class="text-muted">Add or update your children's information.</small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </a>
-        </div>
-        <div class="col-6">
-            <a class="text-decoration-none" href="{% url "parent" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Parent<br><span class="text-muted">Add parent</span></p>
+        <a href="{% url 'parent' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Parent Details</h6>
+                <small class="text-muted">Add or update your parents' information.</small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </a>
-        <a class="text-decoration-none" href="{% url "next_of_kin" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Next Of Kin<br><span class="text-muted">Edit Info</span></p>
+        <a href="{% url 'next_of_kin' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-1">Next of Kin</h6>
+                <small class="text-muted">Add or update your next of kin.</small>
+            </div>
+            <i class="fas fa-chevron-right text-muted"></i>
         </a>
-        <a class="text-decoration-none" href="{% url "edit_profile" %}">
-            <p class="bg-light bg-opacity-25 rounded p-2 text-dark shadow">Personal<br><span class="text-muted">Edit Info</span></p>
-        </a>
-        </div>
     </div>
 </div>
 {% endblock %}

@@ -16,10 +16,15 @@ def dashboardView(request):
 
 def benefitView(request):
     context = {
-        'form': BenefitForm(),
+        'form': BenefitForm(initial={'member':request.user}),
     }
     if request.method == 'POST':
-        pass
+        form = BenefitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+        else:
+            return render(request, 'members/benefit.html', context)
     else:
         return render(request, 'members/benefit.html', context)
 

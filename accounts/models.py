@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -73,9 +73,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     region = models.CharField(max_length=2,choices=REGION, blank=True)
     gender = models.CharField(max_length=1,choices=GENDER, blank=True)
     marital_status = models.CharField(max_length=1,choices=MARITAL_STATUS, blank=True)
-    house_number = models.CharField(max_length=30, blank=True)
     phone_number = models.CharField(max_length=10, blank=True)
     category = models.CharField(max_length=15,choices=CATEGORY, blank=True)
+    staff_id = models.CharField(max_length=20, unique=True, blank=True, null=True, editable=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -84,6 +84,31 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name','last_name']
 
     objects = CustomUserManager()
+
+    def get_full_name(self):
+        """
+        Return the first_name plus the last_name, with a space in between.
+        """
+        full_name = f"{self.first_name} {self.last_name}"
+        return full_name.strip()
+
+    def save(self, *args, **kwargs):
+        # We need to save the instance first to get a primary key (pk)
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        # If it's a new instance and staff_id is not already set
+        if is_new and not self.staff_id:
+            # Format: TWA-{last_two_of_pk}-{last_two_of_join_year}
+            # e.g., TWA-07-24 for pk=7, joined in 2024
+            # e.g., TWA-23-24 for pk=123, joined in 2024
+            last_two_pk = str(self.pk)[-2:].zfill(2)
+            last_two_year = self.date_joined.strftime('%y')
+            self.staff_id = f"TWA-{last_two_pk}-{last_two_year}"
+
+            # Use .objects.filter().update() to save just this field and
+            # avoid calling the save() method again, which would cause an infinite loop.
+            CustomUser.objects.filter(pk=self.pk).update(staff_id=self.staff_id)
 
     def __str__(self):
         return self.email

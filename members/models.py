@@ -6,67 +6,131 @@ from accounts.models import CustomUser
 
 
 class Benefit(models.Model):
-    BENEFITS = {
-        (None,'Select Benefit'),
-        ('Marriage','Marriage'),
-        ('Birth','Birth'),
-        ('Funeral','Funeral'),
+    """
+    Represents a benefit claim made by a member.
+    """
+    # Using a tuple of tuples for choices is the standard Django convention.
+    # The (None, 'Select Benefit') option is best handled in the Form layer.
+    BENEFIT_CHOICES = (
+        ('Marriage', 'Marriage'),
+        ('Birth', 'Birth'),
+        ('Funeral', 'Funeral'),
         ('Accident', 'Accident'),
         ('Ill-health', 'Ill-health'),
-    }
+    )
 
-    benefit_type = models.CharField(max_length=30,choices=BENEFITS, blank=True, null=True)
-    detail = models.CharField(max_length=150, blank=True, null=True)
-    supporting_document = models.FileField(upload_to='supporting_documents')
-    member = models.CharField(max_length=10, blank=True, null=True)
+    # It's generally better to avoid null=True on CharFields.
+    # Django convention is to use an empty string for no data.
+    benefit_type = models.CharField(max_length=30, choices=BENEFIT_CHOICES, blank=True, default='')
+    detail = models.TextField(blank=True, default='')
+    supporting_document = models.FileField(upload_to='supporting_documents', blank=True, null=True)
+    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='benefits')
     status = models.CharField(max_length=10, blank=True, default="Pending")
-    reason = models.CharField(max_length=150, blank=True, null=True)
+    reason = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Benefit"
+        verbose_name_plural = "Benefits"
 
     def __str__(self):
-        return (self.member, self.benefit_type)
+        """
+        Returns a string representation of the benefit claim.
+        """
+        # Assumes CustomUser has a method to get the full name.
+        # get_benefit_type_display() returns the human-readable value of the choice.
+        return f"{self.member} - {self.get_benefit_type_display()}"
 
 
 class Spouse(models.Model):
-    first_name = models.CharField(max_length=30, blank=True)    
-    middle_name = models.CharField(max_length=30, blank=True)    
+    """
+    Represents the spouse of a member.
+    A member can have only one spouse record.
+    """
+    first_name = models.CharField(max_length=30, blank=True)
+    middle_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     house_number = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(max_length=30, blank=True)
-    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True)
+    # A OneToOneField ensures that each member can have only one spouse.
+    member = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='spouse')
+
+    class Meta:
+        verbose_name = "Spouse"
+        verbose_name_plural = "Spouses"
 
     def __str__(self):
-        return (self.first_name, self.middle_name, self.last_name)
+        """
+        Returns the full name of the spouse.
+        """
+        return f"{self.first_name} {self.middle_name} {self.last_name}".strip().replace('  ', ' ')
 
 
 class Children(models.Model):
-    first_name = models.CharField(max_length=30, blank=True)    
-    middle_name = models.CharField(max_length=30, blank=True)    
+    """
+    Represents a child of a member.
+    A member can have multiple children.
+    """
+    first_name = models.CharField(max_length=30, blank=True)
+    middle_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='children')
+
+    class Meta:
+        # Correctly pluralizes to "children" in the admin.
+        verbose_name = "Child"
+        verbose_name_plural = "Children"
 
     def __str__(self):
-        return (self.first_name, self.middle_name, self.last_name)
+        """
+        Returns the full name of the child.
+        """
+        return f"{self.first_name} {self.middle_name} {self.last_name}".strip().replace('  ', ' ')
 
 
 class NextOfKin(models.Model):
-    first_name = models.CharField(max_length=30, blank=True)    
-    middle_name = models.CharField(max_length=30, blank=True)    
+    """
+    Represents the next of kin for a member.
+    A member can have only one next of kin record.
+    """
+    first_name = models.CharField(max_length=30, blank=True)
+    middle_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     house_number = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(max_length=30, blank=True)
-    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True)
+    # A OneToOneField ensures that each member can have only one next of kin.
+    member = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='next_of_kin')
+
+    class Meta:
+        verbose_name = "Next of Kin"
+        verbose_name_plural = "Next of Kin"
 
     def __str__(self):
-        return (self.first_name, self.middle_name, self.last_name)
-    
+        """
+        Returns the full name of the next of kin.
+        """
+        return f"{self.first_name} {self.middle_name} {self.last_name}".strip().replace('  ', ' ')
+
 
 class Parent(models.Model):
-    fathers_first_name = models.CharField(max_length=30, blank=True)    
-    fathers_middle_name = models.CharField(max_length=30, blank=True)    
-    fathers_last_name = models.CharField(max_length=30, blank=True)
-    mothers_first_name = models.CharField(max_length=30, blank=True)    
-    mothers_middle_name = models.CharField(max_length=30, blank=True)    
-    mothers_last_name = models.CharField(max_length=30, blank=True)
-    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    """
+    Represents the parents of a member.
+    A member can have only one parent record.
+    """
+    fathers_first_name = models.CharField("Father's First Name", max_length=30, blank=True)
+    fathers_middle_name = models.CharField("Father's Middle Name", max_length=30, blank=True)
+    fathers_last_name = models.CharField("Father's Last Name", max_length=30, blank=True)
+    mothers_first_name = models.CharField("Mother's First Name", max_length=30, blank=True)
+    mothers_middle_name = models.CharField("Mother's Middle Name", max_length=30, blank=True)
+    mothers_last_name = models.CharField("Mother's Last Name", max_length=30, blank=True)
+    # A OneToOneField is appropriate here as a member has one set of parents.
+    member = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='parent')
 
-    
+    class Meta:
+        verbose_name = "Parent"
+        verbose_name_plural = "Parents"
+
+    def __str__(self):
+        """
+        Returns a string representation for the member's parents.
+        """
+        return f"Parents of {self.member}"
