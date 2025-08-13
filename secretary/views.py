@@ -1,16 +1,24 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import CustomUser
 from django.db.models import Q
 from django.core.paginator import Paginator
 from accounts.forms import EditUserForm
+from .models import Announcement
+from django.http import HttpResponseForbidden
+from .forms import AnnouncementForm
 
 # Create your views here.
 @login_required
 def secretaryDashboardView(request):
+    """
+    Displays the secretary dashboard with recent announcements and a form to add new ones.
+    """
+    announcements = Announcement.objects.all()[:5]  # Get the 5 most recent announcements
     context = {
         'navbar': True,
+        'announcements': announcements,
     }
     return render(request, 'secretary/dashboard.html', context)
 
@@ -76,3 +84,95 @@ def memberEditView(request, pk):
         'member': member,
     }
     return render(request, 'secretary/member_edit_form.html', context)
+
+@login_required
+def announcement_add_view(request):
+    """
+    Handles creating a new announcement on a dedicated page.
+    """
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.author = request.user
+            announcement.save()
+            messages.success(request, "Announcement posted successfully.")
+            return redirect('secretary_dashboard')
+        else:
+            messages.error(request, "There was an error with your submission. Please check the form.")
+    else:
+        form = AnnouncementForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'secretary/announcement_form.html', context)
+
+@login_required
+def announcement_edit_view(request, pk):
+    """
+    Handles editing an existing announcement.
+    """
+    announcement = get_object_or_404(Announcement, pk=pk)
+
+    # Check if the current user is the author of the announcement
+    if announcement.author != request.user:
+        return HttpResponseForbidden("You are not authorized to edit this announcement.")
+
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST, instance=announcement)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Announcement updated successfully.")
+            return redirect('secretary_dashboard')
+        else:
+            messages.error(request, "There was an error with your submission. Please check the form.")
+    else:
+        form = AnnouncementForm(instance=announcement)
+
+    context = {
+        'form': form,
+        'announcement': announcement,
+    }
+    return render(request, 'secretary/announcement_edit_form.html', context)
+
+@login_required
+def announcement_delete_view(request, pk):
+     """
+     Handles deleting an existing announcement.
+     """
+     announcement = get_object_or_404(Announcement, pk=pk)
+
+     # Check if the current user is the author of the announcement
+     if announcement.author != request.user:
+         return HttpResponseForbidden("You are not authorized to delete this announcement.")
+
+     if request.method == 'POST':
+         announcement.delete()
+         messages.success(request, "Announcement deleted successfully.")
+         return redirect('secretary_dashboard')
+
+     context = {
+         'announcement': announcement,
+     }
+     return render(request, 'secretary/announcement_delete_confirm.html', context)
+
+@login_required
+def dismiss_announcement_view(request, pk):
+    """
+    Marks an announcement as read for the current user and redirects them back
+    to the page they came from.
+    """
+    # Determine a sensible fallback redirect based on user type.
+    if hasattr(request.user, 'is_staff') and request.user.is_staff:
+        fallback_redirect = 'finance:finance_dashboard'
+    else:
+        fallback_redirect = 'dashboard' # Assumes 'dashboard' is the member dashboard URL name.
+
+    if request.method == 'POST':
+        announcement = get_object_or_404(Announcement, pk=pk)
+        announcement.read_by.add(request.user)
+
+    # Redirect back to the referer page, or to the fallback if not available.
+    referer = request.META.get('HTTP_REFERER')
+    return redirect(referer or fallback_redirect)

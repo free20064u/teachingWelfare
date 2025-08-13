@@ -3,101 +3,111 @@
 
 
 {% block content %}
-<div class="container">
-    <div class="text-center">
-        <h5 class="text-center my-3">Dashboard</h5>
-    </div>
-    <div class="row d-flex">
-        <div class="col-6 my-3">
-        <a href="{% url "register" %}">
-            <button class="btn btn-primary rounded-pill">Add Member</button>
-        </a>
-    </div>
-    <div class="col-6 my-3">
-        <a href="{% url "edit_user" %}">
-            <button class="btn btn-primary rounded-pill">Edit Member</button>
-        </a>
-    </div>
-    </div>
-    
-    <div>
-        <h6>Upcoming Events</h6> 
+<!-- Main container for the dashboard -->
+<div class="container py-5">
+ <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-normal text-primary">Dashboard</h3>
         <div>
-            <div class="bg-primary bg-opacity-25 rounded-3 px-2">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-12">
-                        <h6>Marriage ceremony</h6>
-                        <p class="text-muted m-0">Marriage ceremony Benson and Joana</p>
-                    </div>
-                </div>
-                <hr class="m-0">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-8">
-                        <h6>Funeral</h6>
-                        <p class="text-muted m-0">Funeral of the father of Mr. Kakra</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <div class="mt-4">
-        <h6>Members Engagement</h6>
-        <div>
-            <div class="bg-primary bg-opacity-25 rounded-3 px-2">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-6">
-                        <p class="text-muted m-0">Active Members</p>
-                        <h6>25</h6>
-                    </div>
-                    <div class="col-6">
-                        <p class="text-muted m-0">Contribution</p>
-                        <h6>GHc 1225</h6>
-                    </div>
-                </div>
-                <hr class="m-0">
-                <div class="row d-flex align-items-center py-2">
-                    
-                    <div class="col-12">
-                        <p class="text-muted m-0">Events Attended This Month</p>
-                        <h6>4</h6>
-                    </div>
-                    
-                </div>
-
-            </div>
+            <a href="{% url "register" %}" class="btn btn-primary rounded-pill">
+                <i class="fa fa-user-plus me-2"></i>Add Member
+            </a>
         </div>
     </div>
     
-    <div class="mt-4">
-        <h6>Communication</h6>
-        <div>
-            <div class="bg-primary bg-opacity-25 rounded-3 px-2">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-2">
-                        <button class="btn rounded-circle bg-warning">
-                            <i class="fa-solid fa-house"></i>
-                        </button>
+   
+    
+   
+    <!-- Upcoming Events Section -->
+    <div class="mb-4">
+        <h5>Upcoming Events</h5> 
+        <!-- List of Upcoming Events --> 
+        <div class="list-group">
+            <!-- Event 1 -->
+            <div class="list-group-item  rounded-3 shadow-sm border-0">
+                <div class="d-flex align-items-center">
+                    <!-- Event Details -->
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0">Marriage Ceremony</h6>
+                        <p class="text-muted m-0">Benson & Joana</p>
                     </div>
-                    <div class="col-10">
-                        <h6>Announcement</h6>
-                        <p class="text-muted m-0">Reminder: marriage ceremony next saturday</p>
-                    </div>   
                 </div>
-                <hr class="m-0">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-2">
-                        <button class="btn rounded-circle bg-warning">
-                            <i class="fa-solid fa-house"></i>
-                        </button>
-                    </div>
-                    <div class="col-10">
-                        <h6>Announcement</h6>
-                        <p class="text-muted m-0">Reminder: marriage ceremony next saturday</p>
-                    </div>   
-                </div>
-
             </div>
+            <!-- Event 2 -->
+            <div class="list-group-item rounded-3 shadow-sm border-0">
+                <div class="d-flex align-items-center">
+                    <!-- Event Details -->
+                    <div class="flex-grow-1">
+
+                        <h6 class="mb-0">Funeral</h6>
+                        <p class="text-muted m-0">Father of Mr. Kakra</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more events here -->
+        </div>
+    </div>
+
+    <!-- Members Engagement Section --> 
+    <div class="mb-4"> 
+        <h5>Members Engagement</h5> 
+        <!-- Engagement Metrics --> 
+        <div class="list-group">
+            <!-- Engagement Summary -->
+            <div class="list-group-item rounded-3 shadow-sm border-0">
+                <div class="d-flex justify-content-between align-items-center"> 
+                    <!-- Active Members -->
+                    <div>
+                        <p class="text-muted mb-1">Active Members</p>
+                        <h6 class="mb-0">25</h6>
+                    </div>
+                    <!-- Total Contribution -->
+                    <div>
+                        <p class="text-muted mb-1">Total Contribution</p>
+                        <h6 class="mb-0">GH₵ 1225</h6>
+                    </div>
+                </div> 
+                <hr class="m-0">
+                <!-- Events Attended --> 
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <!-- Events Attended Details -->
+                    <div>
+                        <p class="text-muted mb-1">Events Attended This Month</p>
+                        <h6 class="mb-0">4</h6> 
+                    </div> 
+                </div>
+            </div> 
+        </div>
+    </div>
+    
+
+
+    <!-- Recent Announcements Section -->
+    <div class="mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Recent Announcements</h5>
+            <a href="{% url 'add_announcement' %}" class="btn btn-success rounded-pill">
+                <i class="fas fa-plus-circle me-2"></i>Add Announcement
+            </a>
+        </div>
+        <div class="list-group">
+            {% for announcement in announcements %}
+                <div class="list-group-item list-group-item-action flex-column align-items-start mb-2 rounded-3 shadow-sm border-0">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ announcement.title }}</h6>
+                        <small class="text-muted">{{ announcement.created_at|timesince }} ago</small>
+                        <div>
+                            <a href="{% url 'announcement_edit' pk=announcement.pk %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                            <a href="{% url 'announcement_delete' pk=announcement.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                    <p class="mb-1">{{ announcement.content|linebreaksbr }}</p>
+                    <small class="text-muted">By: {{ announcement.author.get_full_name|default:announcement.author.email }}</small>
+                </div>
+            {% empty %}
+                <div class="list-group-item rounded-3 shadow-sm border-0"> 
+                    <p class="mb-0 text-muted">No announcements have been posted yet.</p>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </div>

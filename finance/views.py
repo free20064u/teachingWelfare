@@ -9,14 +9,17 @@ from django.db.models import Q, Value, Sum, Max
 from django.db.models.functions import Concat, TruncMonth
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 from accounts.models import CustomUser
 from members.models import Benefit
+from secretary.models import Announcement
 from .models import Dues
 from .forms import DuesPaymentForm
 
 # Create your views here.
+@login_required
 def financeDashboardView(request):
     # Aggregate total fund balance from all dues payments
     total_fund_balance = Dues.objects.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
@@ -61,6 +64,9 @@ def financeDashboardView(request):
     # Get pending benefit requests to display as notifications/action items
     pending_benefits = Benefit.objects.filter(status='Pending').select_related('member').order_by('-pk')
 
+    # Get announcements the user hasn't read
+    unread_announcements = Announcement.objects.exclude(read_by=request.user)
+
     context = {
         'navbar':True,
         'total_fund_balance': total_fund_balance,
@@ -71,10 +77,12 @@ def financeDashboardView(request):
         'yearly_total_contributions': yearly_total_contributions,
         'monthly_total_contributions': monthly_total_contributions,
         'pending_benefits': pending_benefits,
+        'unread_announcements': unread_announcements,
     }
     return render(request, 'finance/dashboard.html', context)
 
 
+@login_required
 def manageBenefitsView(request):
     """
     Displays a list of all benefit requests for the finance team to manage.
@@ -94,6 +102,7 @@ def manageBenefitsView(request):
     return render(request, 'finance/manage_benefits.html', context)
 
 
+@login_required
 @require_POST
 def processBenefitView(request, pk, action):
     """
@@ -120,6 +129,7 @@ def processBenefitView(request, pk, action):
     return redirect(f"{reverse('finance:manage_benefits')}?status=Pending")
 
 
+@login_required
 def financeReportView(request):
     """
     Provides a detailed financial report with year-based filtering.
@@ -179,6 +189,7 @@ def financeReportView(request):
     return render(request, 'finance/finance_report.html', context)
 
 
+@login_required
 def financeMembersListView(request):
     # Filter out superusers from the list, as they are not regular members
     # and do not have dues payment history. This prevents confusion.
@@ -204,6 +215,7 @@ def financeMembersListView(request):
     return render(request, 'finance/members_list.html', context)
 
 
+@login_required
 def financeMemberDetailView(request, pk):
     member = get_object_or_404(CustomUser, pk=pk)
     # Define the maximum amount that can be recorded for a single month.
@@ -306,6 +318,7 @@ def financeMemberDetailView(request, pk):
     return render(request, 'finance/member_detail.html', context)
 
 
+@login_required
 def financeMemberStatementPrintView(request, pk):
     member = get_object_or_404(CustomUser, pk=pk)
     dues_history = member.dues.all().order_by('payment_date')
@@ -319,6 +332,7 @@ def financeMemberStatementPrintView(request, pk):
     return render(request, 'finance/member_statement_print.html', context)
 
 
+@login_required
 def dues_edit_view(request, pk):
     """
     View to edit an existing dues payment.
@@ -342,6 +356,7 @@ def dues_edit_view(request, pk):
     return render(request, 'finance/dues_edit.html', context)
 
 
+@login_required
 def dues_delete_view(request, pk):
     """
     View to delete a dues payment after confirmation.

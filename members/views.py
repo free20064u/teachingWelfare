@@ -3,13 +3,16 @@ from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, SpouseForm
 from .models import Children, NextOfKin, Parent, Spouse
 from finance.models import Dues
+from secretary.models import Announcement
 
 
 # Create your views here.
+@login_required
 def dashboardView(request):
     member = request.user
 
@@ -34,16 +37,20 @@ def dashboardView(request):
     # Get the 5 most recent payments for the activity feed.
     recent_payments = Dues.objects.filter(member=member).order_by('-payment_date')[:5]
 
+    # Get announcements that the logged-in member has not yet dismissed.
+    unread_announcements = Announcement.objects.exclude(read_by=member)
+
     context = {
         'navbar':True,
         'total_contribution': total_contribution,
         'payment_status': payment_status,
         'payment_status_class': payment_status_class,
         'recent_payments': recent_payments,
+        'unread_announcements': unread_announcements,
     }
     return render(request, 'members/dashboard.html', context)
 
-
+@login_required
 def fundDetailsView(request):
     """
     Displays a paginated and filterable statement of the logged-in
@@ -87,6 +94,7 @@ def fundDetailsView(request):
     return render(request, 'members/fund_details.html', context)
 
 
+@login_required
 def benefitView(request):
     if request.method == 'POST':
         form = BenefitForm(request.POST, request.FILES)
@@ -108,11 +116,13 @@ def benefitView(request):
     return render(request, 'members/benefit.html', context)
 
 
+@login_required
 def benefitListView(request):
     context = {}
     return render(request, 'members/benefitList.html', context)
 
 
+@login_required
 def profileView(request):
     try:
         spouse = Spouse.objects.get(member=request.user)
@@ -138,6 +148,7 @@ def profileView(request):
     
     return render(request, 'members/profile.html', context)
 
+@login_required
 def editProfileView(request):
     context = {
         'form': EditProfileForm(instance=request.user),
@@ -155,6 +166,7 @@ def editProfileView(request):
         return render(request, 'members/editProfile.html', context)
 
     
+@login_required
 def spouseView(request):
     context = {
         'form': SpouseForm(initial={'member':request.user })
@@ -170,6 +182,7 @@ def spouseView(request):
         return render(request, 'members/spouse.html', context)
 
 
+@login_required
 def childrenView(request):
     context = {
         'form': ChildrenForm(initial={'member': request.user}),
@@ -183,6 +196,7 @@ def childrenView(request):
         return render(request, 'members/children.html', context)
     
 
+@login_required
 def parentView(request):
     context = {
         'form': ParentForm(initial={'member': request.user}),
@@ -196,6 +210,7 @@ def parentView(request):
         return render(request, 'members/children.html', context)
 
 
+@login_required
 def nextOfKinView(request):
     context = {
         'form': NextOfKinForm(initial={'member': request.user}),

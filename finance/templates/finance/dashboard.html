@@ -8,6 +8,36 @@
         <h3 class="fw-light">Finance Dashboard</h3>
     </div>
 
+    <!-- Announcements Section for Members -->
+    {% if unread_announcements %}
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm border-info">
+            <div class="card-header bg-info bg-opacity-25 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-normal"><i class="fas fa-bullhorn me-2"></i>Announcements</h5>
+                <span class="badge bg-info rounded-pill">{{ unread_announcements|length }}</span>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for announcement in unread_announcements %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ announcement.title }}</h6>
+                        <small class="text-muted">{{ announcement.created_at|timesince }} ago</small>
+                    </div>
+                    <p class="mb-1">{{ announcement.content|linebreaksbr }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">By: {{ announcement.author.get_full_name|default:announcement.author.email }}</small>
+                        <form method="post" action="{% url 'dismiss_announcement' pk=announcement.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="row g-4">
         
 
