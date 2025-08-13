@@ -1,10 +1,11 @@
 import datetime
+import calendar
 from decimal import Decimal
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator 
 from django.db.models import Q, Value, Sum, Max
-from django.db.models.functions import Concat
+from django.db.models.functions import Concat, TruncMonth
 from django.contrib import messages
 from django.utils import timezone
 
@@ -26,6 +27,17 @@ def financeDashboardView(request):
     # --- Logic for outstanding members ---
     today = timezone.now().date()
     current_month_year = today.strftime('%B %Y')
+
+    # Calculate total contributions for the current year
+    yearly_total_contributions = Dues.objects.filter(
+        payment_date__year=today.year
+    ).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+
+    # Calculate total contributions for the current month
+    monthly_total_contributions = Dues.objects.filter(
+        payment_date__year=today.year,
+        payment_date__month=today.month
+    ).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
 
     # Get IDs of members who have paid in the current month
     paid_this_month_ids = Dues.objects.filter(
@@ -50,8 +62,69 @@ def financeDashboardView(request):
         'recent_activities': recent_activities,
         'outstanding_members': outstanding_members,
         'current_month_year': current_month_year,
+        'yearly_total_contributions': yearly_total_contributions,
+        'monthly_total_contributions': monthly_total_contributions,
     }
     return render(request, 'finance/dashboard.html', context)
+
+
+def financeReportView(request):
+    """
+    Provides a detailed financial report with year-based filtering.
+    """
+    today = timezone.now().date()
+    
+    # Determine the year to display. Default to the current year.
+    try:
+        selected_year = int(request.GET.get('year', today.year))
+    except (ValueError, TypeError):
+        selected_year = today.year
+
+    # Get a list of all years for which payments exist, for the filter dropdown.
+    payment_dates = Dues.objects.dates('payment_date', 'year', order='DESC')
+    available_years = [date.year for date in payment_dates]
+
+    # Filter dues for the selected year
+    dues_for_year = Dues.objects.filter(payment_date__year=selected_year)
+
+    # --- Key Metrics ---
+    total_fund_balance = Dues.objects.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+    yearly_total_contributions = dues_for_year.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+    total_members = CustomUser.objects.filter(is_superuser=False).count()
+    
+    # Calculate average contribution per member for the year
+    average_contribution = (yearly_total_contributions / total_members) if total_members > 0 else Decimal('0.00')
+
+    # --- Monthly Breakdown ---
+    # Group contributions by month for the selected year
+    monthly_breakdown = dues_for_year.annotate(
+        month=TruncMonth('payment_date')
+    ).values(
+        'month'
+    ).annotate(
+        total=Sum('amount')
+    ).order_by('month')
+
+    # --- Top Contributors ---
+    # Get the top 10 contributors for the selected year
+    top_contributors = dues_for_year.values(
+        'member__id', 
+    ).annotate(
+        full_name=Concat('member__first_name', Value(' '), 'member__last_name'),
+        total_paid=Sum('amount')
+    ).order_by('-total_paid')[:10]
+
+    context = {
+        'navbar': True,
+        'selected_year': selected_year,
+        'available_years': available_years,
+        'total_fund_balance': total_fund_balance,
+        'yearly_total_contributions': yearly_total_contributions,
+        'average_contribution': average_contribution,
+        'monthly_breakdown': monthly_breakdown,
+        'top_contributors': top_contributors,
+    }
+    return render(request, 'finance/finance_report.html', context)
 
 
 def financeMembersListView(request):

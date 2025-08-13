@@ -144,5 +144,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL ='accounts.CustomUser'
 
 # LiveReload settings
-LIVERELOAD_HOST = '192.168.1.2'
+LIVERELOAD_HOST = '192.168.1.1'
 LIVERELOAD_PORT = '35729'

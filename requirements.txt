@@ -1,4 +1,10 @@
 asgiref==3.9.1
 Django==5.2.4
+django-livereload-server==0.5.1
+Faker==37.5.3
+mysqlclient==2.2.7
+pillow==11.3.0
 sqlparse==0.5.3
+tornado==6.5.1
 tzdata==2025.2
+whitenoise==6.9.0
