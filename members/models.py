@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 
 from accounts.models import CustomUser
 
@@ -9,8 +11,6 @@ class Benefit(models.Model):
     """
     Represents a benefit claim made by a member.
     """
-    # Using a tuple of tuples for choices is the standard Django convention.
-    # The (None, 'Select Benefit') option is best handled in the Form layer.
     BENEFIT_CHOICES = (
         ('Marriage', 'Marriage'),
         ('Birth', 'Birth'),
@@ -18,14 +18,29 @@ class Benefit(models.Model):
         ('Accident', 'Accident'),
         ('Ill-health', 'Ill-health'),
     )
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Denied', 'Denied'),
+    )
 
-    # It's generally better to avoid null=True on CharFields.
-    # Django convention is to use an empty string for no data.
-    benefit_type = models.CharField(max_length=30, choices=BENEFIT_CHOICES, blank=True, default='')
-    detail = models.TextField(blank=True, default='')
+    benefit_type = models.CharField(max_length=30, choices=BENEFIT_CHOICES)
+    detail = models.TextField()
     supporting_document = models.FileField(upload_to='supporting_documents', blank=True, null=True)
     member = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='benefits')
-    status = models.CharField(max_length=10, blank=True, default="Pending")
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    date_submitted = models.DateTimeField(default=timezone.now)
+    
+    # Fields to track who processed the request and when
+    processed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='processed_benefits'
+    )
+    processed_date = models.DateTimeField(null=True, blank=True)
     reason = models.TextField(blank=True, null=True)
 
     class Meta:

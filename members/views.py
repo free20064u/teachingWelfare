@@ -1,32 +1,111 @@
 from django.shortcuts import redirect, render
+from django.db.models import Sum
+from django.core.paginator import Paginator
+from django.utils import timezone
+from django.contrib import messages
 
 from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, SpouseForm
 from .models import Children, NextOfKin, Parent, Spouse
+from finance.models import Dues
 
 
 # Create your views here.
 def dashboardView(request):
     member = request.user
+
+    # Calculate the member's total contribution from all their dues payments.
+    total_contribution = Dues.objects.filter(member=member).aggregate(total=Sum('amount'))['total'] or 0.00
+
+    # Determine the member's payment status for the current month.
+    today = timezone.now().date()
+    has_paid_this_month = Dues.objects.filter(
+        member=member,
+        payment_date__year=today.year,
+        payment_date__month=today.month
+    ).exists()
+
+    if has_paid_this_month:
+        payment_status = "Up to Date"
+        payment_status_class = "text-success"
+    else:
+        payment_status = "Outstanding"
+        payment_status_class = "text-warning"
+
+    # Get the 5 most recent payments for the activity feed.
+    recent_payments = Dues.objects.filter(member=member).order_by('-payment_date')[:5]
+
     context = {
-        
         'navbar':True,
+        'total_contribution': total_contribution,
+        'payment_status': payment_status,
+        'payment_status_class': payment_status_class,
+        'recent_payments': recent_payments,
     }
     return render(request, 'members/dashboard.html', context)
 
 
-def benefitView(request):
+def fundDetailsView(request):
+    """
+    Displays a paginated and filterable statement of the logged-in
+    member's contribution history.
+    """
+    member = request.user
+    
+    # Base queryset for all dues related to the member
+    all_dues_history = Dues.objects.filter(member=member).order_by('-payment_date')
+
+    # Get unique years for which payments exist, for the filter dropdown
+    payment_dates = all_dues_history.dates('payment_date', 'year', order='DESC')
+    available_years = [date.year for date in payment_dates]
+
+    # Get the selected year from the URL query parameter for filtering
+    selected_year_str = request.GET.get('year')
+    dues_for_display = all_dues_history
+    selected_year = None
+
+    if selected_year_str and selected_year_str.isdigit():
+        selected_year = int(selected_year_str)
+        dues_for_display = all_dues_history.filter(payment_date__year=selected_year)
+
+    # Calculate the total for the displayed period and the grand total
+    total_dues_period = dues_for_display.aggregate(total=Sum('amount'))['total'] or 0.00
+    grand_total_dues = all_dues_history.aggregate(total=Sum('amount'))['total'] or 0.00
+
+    # Add pagination to the dues history
+    paginator = Paginator(dues_for_display, 12)  # Show 12 payments per page
+    page_number = request.GET.get('page')
+    dues_page_obj = paginator.get_page(page_number)
+
     context = {
-        'form': BenefitForm(initial={'member':request.user}),
+        'navbar': True,
+        'dues_history': dues_page_obj,
+        'total_dues_period': total_dues_period,
+        'grand_total_dues': grand_total_dues,
+        'available_years': available_years,
+        'selected_year': selected_year,
     }
+    return render(request, 'members/fund_details.html', context)
+
+
+def benefitView(request):
     if request.method == 'POST':
-        form = BenefitForm(request.POST)
+        form = BenefitForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('dashboard')
-        else:
-            return render(request, 'members/benefit.html', context)
+            benefit = form.save(commit=False)
+            benefit.member = request.user  # Securely assign the logged-in member
+            benefit.save()
+            messages.success(request, "Your benefit request has been submitted successfully and is now pending review.")
+            return redirect('benefit_list')
     else:
-        return render(request, 'members/benefit.html', context)
+        # For a GET request, create a new, empty form.
+        # The member is assigned in the POST logic, not through the form.
+        form = BenefitForm()
+
+    context = {
+        'form': form,
+        'navbar': True,
+    }
+    return render(request, 'members/benefit.html', context)
 
 
 def benefitListView(request):

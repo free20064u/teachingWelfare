@@ -8,11 +8,11 @@
         <h5 class="text-center my-3">Benefit Request</h5>
     </div>
     <div>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
             <div class="text-center mt-4">
-                <a href="{% url 'benefit' %}" class="btn btn-primary rounded-pill col-12 ">Submit Request</a>
+                <button type="submit" class="btn btn-primary rounded-pill col-12 ">Submit Request</button>
             </div>
         </form>
     </div>

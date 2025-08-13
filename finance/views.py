@@ -3,13 +3,16 @@ import calendar
 from decimal import Decimal
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.core.paginator import Paginator 
 from django.db.models import Q, Value, Sum, Max
 from django.db.models.functions import Concat, TruncMonth
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils import timezone
 
 from accounts.models import CustomUser
+from members.models import Benefit
 from .models import Dues
 from .forms import DuesPaymentForm
 
@@ -55,6 +58,9 @@ def financeDashboardView(request):
         last_payment_date=Max('dues__payment_date')
     ).order_by('last_name', 'first_name')
 
+    # Get pending benefit requests to display as notifications/action items
+    pending_benefits = Benefit.objects.filter(status='Pending').select_related('member').order_by('-pk')
+
     context = {
         'navbar':True,
         'total_fund_balance': total_fund_balance,
@@ -64,8 +70,54 @@ def financeDashboardView(request):
         'current_month_year': current_month_year,
         'yearly_total_contributions': yearly_total_contributions,
         'monthly_total_contributions': monthly_total_contributions,
+        'pending_benefits': pending_benefits,
     }
     return render(request, 'finance/dashboard.html', context)
+
+
+def manageBenefitsView(request):
+    """
+    Displays a list of all benefit requests for the finance team to manage.
+    Allows filtering by status.
+    """
+    status_filter = request.GET.get('status', 'Pending')
+    if status_filter not in ['Pending', 'Approved', 'Denied']:
+        status_filter = 'Pending'
+
+    benefit_requests = Benefit.objects.filter(status=status_filter).select_related('member').order_by('-date_submitted')
+
+    context = {
+        'navbar': True,
+        'benefit_requests': benefit_requests,
+        'status_filter': status_filter,
+    }
+    return render(request, 'finance/manage_benefits.html', context)
+
+
+@require_POST
+def processBenefitView(request, pk, action):
+    """
+    Processes a benefit request by approving or denying it.
+    """
+    benefit = get_object_or_404(Benefit, pk=pk)
+    
+    if benefit.status == 'Pending':
+        if action == 'approve':
+            benefit.status = 'Approved'
+            messages.success(request, f"Benefit request for {benefit.member.get_full_name()} has been approved.")
+        elif action == 'deny':
+            benefit.status = 'Denied'
+            messages.warning(request, f"Benefit request for {benefit.member.get_full_name()} has been denied.")
+        
+        # Record who processed the request and when
+        benefit.processed_by = request.user
+        benefit.processed_date = timezone.now()
+        benefit.save()
+    else:
+        messages.error(request, "This request has already been processed and cannot be changed.")
+
+    # Redirect back to the pending list, which is the most common workflow.
+    return redirect(f"{reverse('finance:manage_benefits')}?status=Pending")
 
 
 def financeReportView(request):

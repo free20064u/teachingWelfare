@@ -69,6 +69,32 @@
             </div>
         </div>
 
+        <!-- Pending Benefit Requests -->
+        <div class="col-12">
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-warning bg-opacity-25 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-normal"><i class="fas fa-bell me-2"></i>Pending Benefit Requests</h5>
+                    {% if pending_benefits %}
+                    <span class="badge bg-danger rounded-pill">{{ pending_benefits|length }}</span>
+                    {% endif %}
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for benefit in pending_benefits %}
+                    {# This link now goes to the management page, which is more actionable #}
+                    <a href="{% url 'finance:manage_benefits' %}?status=Pending" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">{{ benefit.member.get_full_name }}</h6>
+                            <small class="text-muted">Requested: {{ benefit.get_benefit_type_display }}</small>
+                        </div>
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item text-center py-3"><p class="text-muted m-0">No pending benefit requests.</p></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
         <!-- Recent Activities Card -->
         <div class="col-12">
             <div class="card shadow-sm">
