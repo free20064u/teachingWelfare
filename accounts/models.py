@@ -76,6 +76,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=10, blank=True)
     category = models.CharField(max_length=15,choices=CATEGORY, blank=True)
     staff_id = models.CharField(max_length=20, unique=True, blank=True, null=True, editable=False)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)

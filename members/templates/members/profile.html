@@ -4,10 +4,21 @@
 
 {% block content %}
 <div class="container">
-    <div class="text-center">
-        <h5 class="text-center my-3">Personal Information</h5>
+    <div class="text-center mb-4">
+        <h5 class="text-center my-3">Member Profile</h5>
+        
+        {% if request.user.profile_picture %}
+            <img src="{{ request.user.profile_picture.url }}" alt="Profile Picture" class="rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover;">
+        {% else %}
+            <div class="d-inline-block bg-light rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                <i class="fas fa-user fa-3x text-secondary"></i>
+            </div>
+        {% endif %}
     </div>
-    <h6>Personal Details</h6>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Personal Details</h6>
+        <a href="{% url 'updates' %}" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit me-1"></i> Update Information</a>
+    </div>
     <p class="text-muted mb-0">Full Name</p>
     <p class="bg-light bg-opacity-50 rounded p-2">{{ request.user.first_name }} {{ request.user.middle_name }} {{ request.user.last_name }}</p>
     <p class="text-muted mb-0">Email</p>
@@ -90,44 +101,5 @@
         </div>
     </div>
 
-    {# Section with links to edit or add related information #}
-    <h5 class="mt-4">Updates</h5>
-    <div class="list-group">
-        <a href="{% url 'edit_profile' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="mb-1">Personal Details</h6>
-                <small class="text-muted">Edit your personal information.</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </a>
-        <a href="{% url 'spouse' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="mb-1">Spouse Details</h6>
-                <small class="text-muted">Add or update spouse information.</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </a>
-        <a href="{% url 'children' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="mb-1">Children Details</h6>
-                <small class="text-muted">Add or update your children's information.</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </a>
-        <a href="{% url 'parent' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="mb-1">Parent Details</h6>
-                <small class="text-muted">Add or update your parents' information.</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </a>
-        <a href="{% url 'next_of_kin' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-                <h6 class="mb-1">Next of Kin</h6>
-                <small class="text-muted">Add or update your next of kin.</small>
-            </div>
-            <i class="fas fa-chevron-right text-muted"></i>
-        </a>
-    </div>
-</div>
+    
 {% endblock %}

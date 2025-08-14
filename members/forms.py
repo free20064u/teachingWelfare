@@ -222,3 +222,14 @@ class ParentForm(forms.ModelForm):
             ),
             "member": forms.HiddenInput(),
         }
+
+
+class ProfilePictureForm(forms.ModelForm):
+    """A form for updating the user's profile picture."""
+
+    class Meta:
+        model = CustomUser
+        fields = ["profile_picture"]
+        widgets = {
+            "profile_picture": forms.FileInput(attrs={"class": "form-control"}),
+        }

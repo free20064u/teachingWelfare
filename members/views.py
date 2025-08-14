@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, SpouseForm
+from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, ProfilePictureForm, SpouseForm
 from .models import Children, NextOfKin, Parent, Spouse
 from finance.models import Dues
 from secretary.models import Announcement
@@ -147,6 +147,36 @@ def profileView(request):
     }
     
     return render(request, 'members/profile.html', context)
+
+@login_required
+def updatesView(request):
+    """
+    Displays a page with links to various forms for updating member information.
+    """
+    context = {
+        'navbar': True,
+    }
+    return render(request, 'members/updates.html', context)
+
+@login_required
+def updateProfilePictureView(request):
+    """Handles the logic for updating a member's profile picture."""
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile picture has been updated successfully.")
+            return redirect('updates')
+        else:
+            messages.error(request, "There was an error updating your profile picture. Please try again.")
+    else:
+        form = ProfilePictureForm(instance=request.user)
+    context = {
+        'form': form,
+        'navbar': True,
+    }
+    return render(request, 'members/update_profile_picture.html', context)
+
 
 @login_required
 def editProfileView(request):
