@@ -10,6 +10,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static "bootstrap/css/custom-bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "fontawsome/all.min.css" %}">
+    <link rel="shortcut icon" href="{% static 'base/images/wbm-logo4.png' %}" type="image/png">
 
     {# Block for extra head content from child templates #}
     {% block extra_head %}
@@ -25,33 +26,23 @@
         <!-- Main Navigation Bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">TWA</a>
+                <a class="navbar-brand" href="#"><img src="{% static 'base/images/wbm-logo4.png' %}" alt="TWA Logo" style="height: 30px;"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="{% url "homepage" %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
+                            <a class="nav-link" href="{% url 'about' %}">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            <a class="nav-link" href="{% url 'constitution' %}">Constitution</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url "logout" %}">Logout</a>
@@ -91,141 +82,15 @@
     <footer class='text-center bg-primary fixed-bottom text-white py-2'>
         <div class="row d-flex">
             {% if request.user.category == 'admin' %}
-            <div class="col-3">
-                {# TODO: Create an 'admin_dashboard' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-house"></i>
-                    <p class="mb-0 small">Home</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'members_list' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-users"></i>
-                    <p class="mb-0 small">Members</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create an 'admin_reports' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <p class="mb-0 small">Report</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create an 'admin_settings' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-gear"></i>
-                    <p class="mb-0 small">Setting</p>
-                </a>
-            </div>
+                {% include "base/footer_admin.html" %}
             {% elif request.user.category == 'chairperson' %}
-            <div class="col-3">
-                {# TODO: Create a 'chairperson_dashboard' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-house"></i>
-                    <p class="mb-0 small">Home</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create a 'fund_overview' URL for chairperson #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-piggy-bank"></i>
-                    <p class="mb-0 small">Fund</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'profile' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-user"></i>
-                    <p class="mb-0 small">Profile</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create a 'chairperson_settings' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-gear"></i>
-                    <p class="mb-0 small">Setting</p>
-                </a>
-            </div>
+                {% include "base/footer_chair.html" %}
             {% elif request.user.category == 'secretary' %}
-            <div class="col-3">
-                <a href="{% url 'secretary_dashboard' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-house"></i>
-                    <p class="mb-0 small">Home</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'members_list' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-users"></i>
-                    <p class="mb-0 small">Members</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Replace '#' with the actual URL name for reports #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <p class="mb-0 small">Report</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Replace '#' with the actual URL name for settings #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-gear"></i>
-                    <p class="mb-0 small">Setting</p>
-                </a>
-            </div>
+                {% include "base/footer_secretary.html" %}
             {% elif request.user.category == 'finance' %}
-            <div class="col-3">
-                <a href="{% url 'finance:finance_dashboard' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-house"></i>
-                    <p class="mb-0 small">Home</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'finance:finance_members_list' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-users"></i>
-                    <p class="mb-0 small">Members</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create a 'finance_report' URL #}
-                <a href="{% url "finance:finance_report" %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <p class="mb-0 small">Report</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create a 'finance_settings' URL #}
-                <a href="#" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-gear"></i>
-                    <p class="mb-0 small">Setting</p>
-                </a>
-            </div>
+                {% include "base/footer_finance.html" %}
             {% else %}
-            <div class="col-3">
-                <a href="{% url 'dashboard' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-house"></i>
-                    <p class="mb-0 small">Home</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'fund_details' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-piggy-bank"></i>
-                    <p class="mb-0 small">Fund</p>
-                </a>
-            </div>
-            <div class="col-3">
-                <a href="{% url 'profile' %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-user"></i>
-                    <p class="mb-0 small">Profile</p>
-                </a>
-            </div>
-            <div class="col-3">
-                {# TODO: Create a 'settings' URL for members #}
-                <a href="{% url "updates" %}" class="text-white text-decoration-none d-block">
-                    <i class="fa-solid fa-gear"></i>
-                    <p class="mb-0 small">Settings</p>
-                </a>
-            </div>
+                {% include "base/footer_member.html" %}
             {% endif %}   
         </div>
     </footer>

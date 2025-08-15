@@ -1,0 +1,46 @@
+{% extends "base/base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Hero Section -->
+    <div class="p-5 text-center bg-light rounded-3 mb-5 shadow-sm">
+        <h1 class="display-4 fw-bold">About Our Association</h1>
+        <p class="lead col-lg-8 mx-auto">
+            A community-driven organization dedicated to the well-being and professional growth of educators.
+        </p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="row g-4 text-center">
+        <!-- What We Are -->
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white fs-2 rounded-circle mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h2 class="fs-4 fw-bold">What We Are</h2>
+                    <p class="mb-0">A voluntary group built on solidarity and cooperation, providing mutual support to enhance the quality of life for our members.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Mission -->
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white fs-2 rounded-circle mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2 class="fs-4 fw-bold">Our Mission</h2>
+                    <p class="mb-0">To create a supportive network for teachers through financial aid, social events, and professional development, strengthening our entire educational system.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

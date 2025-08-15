@@ -1,0 +1,26 @@
+            <div class="col-3">
+                <a href="{% url 'finance:finance_dashboard' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="{% url 'finance:finance_members_list' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-users"></i>
+                    <p class="mb-0 small">Members</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Create a 'finance_report' URL #}
+                <a href="{% url "finance:finance_report" %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <p class="mb-0 small">Report</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Create a 'finance_settings' URL #}
+                <a href="#" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Setting</p>
+                </a>
+            </div>

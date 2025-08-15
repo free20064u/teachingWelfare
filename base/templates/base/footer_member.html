@@ -1,0 +1,25 @@
+<div class="col-3">
+                <a href="{% url 'dashboard' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-house"></i>
+                    <p class="mb-0 small">Home</p>
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="{% url 'fund_details' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                    <p class="mb-0 small">Fund</p>
+                </a>
+            </div>
+            <div class="col-3">
+                <a href="{% url 'profile' %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-user"></i>
+                    <p class="mb-0 small">Profile</p>
+                </a>
+            </div>
+            <div class="col-3">
+                {# TODO: Create a 'settings' URL for members #}
+                <a href="{% url "updates" %}" class="text-white text-decoration-none d-block">
+                    <i class="fa-solid fa-gear"></i>
+                    <p class="mb-0 small">Settings</p>
+                </a>
+            </div>
