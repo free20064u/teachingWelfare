@@ -19,6 +19,8 @@ def login_view(request):
                 return redirect('secretary_dashboard')  
             elif user.category == 'finance':
                 return redirect('finance:finance_dashboard')
+            elif user.category == 'chairperson':
+                return redirect('chairperson:chairperson_dashboard')
             else:
                 return redirect('dashboard')
         else:

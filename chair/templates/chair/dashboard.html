@@ -1,67 +1,120 @@
 {% extends "base/base.html" %}
 {% load static %}
-
+{% load humanize %}
 
 {% block content %}
-<div class="container">
-    <div class="text-center">
-        <h5 class="text-center my-3">Dashboard</h5>
+<div class="container py-4">
+    <div class="text-center mb-4">
+        <h3 class="fw-light">Chairperson Dashboard</h3>
     </div>
-    <div>
-        <h6>Key Metrics</h6> 
-        <div>
-            <div class="bg-primary bg-opacity-25 rounded-3 px-2">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-8">
-                        <p class="text-muted m-0">Total Fund Balance</p>
-                        <h6>200000</h6>
-                    </div>
-                </div>
-                <hr class="m-0">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-8">
-                        <p class="text-muted m-0">Total number</p>
-                        <h6>25</h6>
-                    </div>
-                </div>
 
+    <!-- Announcements Section -->
+    {% if unread_announcements %}
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm border-info">
+            <div class="card-header bg-info bg-opacity-25 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-normal"><i class="fas fa-bullhorn me-2"></i>Announcements</h5>
+                <span class="badge bg-info rounded-pill">{{ unread_announcements|length }}</span>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for announcement in unread_announcements %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ announcement.title }}</h6>
+                        <small class="text-muted">{{ announcement.date_created|timesince }} ago</small>
+                    </div>
+                    <p class="mb-1">{{ announcement.content|linebreaksbr }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="text-muted">By: {{ announcement.author.get_full_name|default:announcement.author.email }}</small>
+                        <form method="post" action="{% url 'chairperson:dismiss_announcement' pk=announcement.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <div class="mt-4">
-        <h6>Recent Activities</h6>
-        <div>
-            <div class="bg-primary bg-opacity-25 rounded-3 px-2">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-2">
-                        <button class="btn rounded-circle bg-warning">
-                            <i class="fa-solid fa-house"></i>
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <h6>Osei Koojo</h6>
-                        <p class="text-muted m-0">Contribution</p>
-                    </div>
-                    <div class="col-4">
-                        <p class="text-primary">GHc 200</p>
-                    </div>
-                </div>
-                <hr class="m-0">
-                <div class="row d-flex align-items-center py-2">
-                    <div class="col-2">
-                        <button class="btn rounded-circle bg-warning">
-                            <i class="fa-solid fa-calendar"></i>
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <h6>John Dadson</h6>
-                        <p class="text-muted m-0">Benefit</p>
-                    </div>
-                    <div class="col-4">
-                        <p class="text-primary">GHc 300</p>
-                    </div>
-                </div>
+    {% endif %}
 
+    <div class="row g-4">
+        <!-- Fund Overview Card -->
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0 fw-normal"><i class="fas fa-wallet me-2 text-primary"></i>Fund Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <span class="text-muted">Total Fund Balance</span>
+                        <strong class="fs-5 text-success">GH₵ {{ total_fund_balance|floatformat:2|intcomma }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <span class="text-muted">This Year's Contributions</span>
+                        <strong class="fs-5 text-info">GH₵ {{ yearly_total_contributions|default:0|floatformat:2|intcomma }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <span class="text-muted">This Month's Contributions</span>
+                        <strong class="fs-5 text-primary">GH₵ {{ monthly_total_contributions|default:0|floatformat:2|intcomma }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Total Members</span>
+                        <strong class="fs-5">{{ total_members }}</strong>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-end">
+                    <a href="{% url 'chairperson:financial_report' %}" class="btn btn-sm btn-outline-primary">View Detailed Report <i class="fas fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members with Outstanding Payments -->
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0 fw-normal"><i class="fas fa-exclamation-triangle me-2 text-warning"></i>Outstanding Payments for {{ current_month_year }}</h5>
+                </div>
+                <div class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+                    {% for member in outstanding_members %}
+                    <a href="{% url 'chairperson:member_detail' pk=member.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">{{ member.get_full_name }}</h6>
+                            <small class="text-muted">Staff ID: {{ member.staff_id }}</small>
+                        </div>
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item">
+                        <p class="text-success text-center m-0 py-3"><i class="fas fa-check-circle me-2"></i>All members are up-to-date for this month.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Benefit Requests -->
+        <div class="col-12">
+            <div class="card shadow-sm border-warning mt-4">
+                <div class="card-header bg-warning bg-opacity-25 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-normal"><i class="fas fa-bell me-2"></i>Pending Benefit Requests</h5>
+                    {% if pending_benefits %}
+                    <span class="badge bg-danger rounded-pill">{{ pending_benefits|length }}</span>
+                    {% endif %}
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for benefit in pending_benefits %}
+                    <a href="{% url 'chairperson:manage_benefits' %}?status=Pending" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">{{ benefit.member.get_full_name }}</h6>
+                            <small class="text-muted">Requested: {{ benefit.get_benefit_type_display }}</small>
+                        </div>
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </a>
+                    {% empty %}
+                    <div class="list-group-item text-center py-3"><p class="text-muted m-0">No pending benefit requests.</p></div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

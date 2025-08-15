@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Statement for {{ member.get_full_name }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header h2 {
+            margin: 5px 0 0 0;
+            font-size: 18px;
+            font-weight: normal;
+            color: #555;
+        }
+        .details {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        tfoot td {
+            font-weight: bold;
+        }
+        .total-row td {
+            text-align: right;
+            font-size: 16px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Teaching Welfare Association</h1>
+        <h2>Member Payment Statement</h2>
+    </div>
+
+    <div class="details">
+        <p><strong>Member Name:</strong> {{ member.get_full_name }}</p>
+        <p><strong>Staff ID:</strong> {{ member.staff_id|default:"N/A" }}</p>
+        <p><strong>Statement Date:</strong> {{ current_date|date:"F d, Y" }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Payment Date</th>
+                <th>Receipt Number</th>
+                <th style="text-align: right;">Amount (GH₵)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for due in dues_history %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ due.payment_date|date:"F d, Y" }}</td>
+                <td>{{ due.receipt_number }}</td>
+                <td style="text-align: right;">{{ due.amount|floatformat:2 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 20px;">No payments found for this member.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% if dues_history %}
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3"><strong>Total Paid:</strong></td>
+                <td><strong>GH₵ {{ total_dues|floatformat:2 }}</strong></td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+
+    <div class="footer">
+        <p>This is a computer-generated statement.</p>
+    </div>
+
+    <div class="no-print" style="text-align: center; margin-top: 30px;">
+        <button onclick="window.print();" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Print Statement</button>
+    </div>
+</body>
+</html>

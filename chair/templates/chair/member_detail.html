@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+{% load humanize %}
+
+{% block title %}{{ member.get_full_name }} | Chairperson{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Member Details</h2>
+            <a href="{% url 'chairperson:chairperson_dashboard' %}" class="btn btn-sm btn-outline-secondary">Back to Dashboard</a>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{ member.get_full_name }}</h3>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Staff ID:</strong> {{ member.staff_id|default:"N/A" }}</p>
+                    <p><strong>Email:</strong> {{ member.email }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Phone Number:</strong> {{ member.phone_number|default:"N/A" }}</p>
+                    <p><strong>Date Joined:</strong> {{ member.date_joined|date:"F d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            Last login: {{ member.last_login|timesince }} ago
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Dues Payment History</h3>
+            <div>
+                <span class="badge bg-success rounded-pill fs-6 me-2 align-middle">
+                    Total Paid: GH₵ {{ total_dues|floatformat:2|intcomma }}
+                </span>
+                <a href="{% url 'chairperson:member_statement_print' pk=member.pk %}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-print"></i> Print
+                </a>
+            </div>
+        </div>
+        {% regroup dues_history by payment_date.year as dues_by_year %}
+        {% if dues_by_year %}
+        <div class="card-header bg-light border-bottom">
+            <ul class="nav nav-tabs card-header-tabs" id="duesYearTab" role="tablist">
+                {% for year_group in dues_by_year %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if forloop.first %}active{% endif %}" id="year-{{ year_group.grouper }}-tab" data-bs-toggle="tab" data-bs-target="#year-{{ year_group.grouper }}" type="button" role="tab" aria-controls="year-{{ year_group.grouper }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ year_group.grouper }}</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card-body p-0">
+            <div class="tab-content" id="duesYearTabContent">
+                {% for year_group in dues_by_year %}
+                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="year-{{ year_group.grouper }}" role="tabpanel" aria-labelledby="year-{{ year_group.grouper }}-tab">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="ps-3">Payment Date</th>
+                                    <th scope="col">Amount (GH₵)</th>
+                                    <th scope="col">Receipt Number</th>
+                                    <th scope="col">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for due in year_group.list %}
+                                <tr>
+                                    <td class="ps-3">{{ due.payment_date|date:"F d, Y" }}</td>
+                                    <td>{{ due.amount|floatformat:2|intcomma }}</td>
+                                    <td>{{ due.receipt_number|default:"N/A" }}</td>
+                                    <td>{{ due.notes|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <p class="text-center py-4 mb-0">No dues payments found for this member.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
