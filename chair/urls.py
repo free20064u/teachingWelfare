@@ -5,6 +5,7 @@ app_name = 'chairperson'
 
 urlpatterns = [
     path('dashboard/', views.chairDashboardView, name='chairperson_dashboard'),
+    path('members/', views.membersListView, name='members_list'),
     path('report/', views.financialReportView, name='financial_report'),
     path('benefits/', views.manageBenefitsView, name='manage_benefits'),
     path('benefit/<int:pk>/process/<str:action>/', views.processBenefitView, name='process_benefit'),

@@ -8,6 +8,7 @@ urlpatterns = [
     path('report/', views.financeReportView, name='finance_report'),
     path('benefits/', views.manageBenefitsView, name='manage_benefits'),
     path('benefit/<int:pk>/process/<str:action>/', views.processBenefitView, name='process_benefit'),
+    path('benefit/<int:pk>/honour/', views.honourBenefitView, name='honour_benefit'),
     path('members/', views.financeMembersListView, name='finance_members_list'),
     path('member/<int:pk>/', views.financeMemberDetailView, name='finance_member_detail'),
     path('member/<int:pk>/print/', views.financeMemberStatementPrintView, name='finance_member_statement_print'),

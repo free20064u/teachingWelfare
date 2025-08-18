@@ -104,9 +104,14 @@
             <div class="card shadow-sm border-warning">
                 <div class="card-header bg-warning bg-opacity-25 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-normal"><i class="fas fa-bell me-2"></i>Pending Benefit Requests</h5>
-                    {% if pending_benefits %}
-                    <span class="badge bg-danger rounded-pill">{{ pending_benefits|length }}</span>
-                    {% endif %}
+                        <a href="{% url 'finance:manage_benefits' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-list-ul me-2"></i>View Benefit List
+                            {% if pending_benefits %}
+                                <span class="badge bg-danger rounded-pill">
+                                {{ pending_benefits|length }}
+                                </span>
+                            {% endif %}
+                        </a>
                 </div>
                 <div class="list-group list-group-flush">
                     {% for benefit in pending_benefits %}

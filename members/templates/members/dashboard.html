@@ -118,11 +118,16 @@
         <div class="col-lg-5">
             <div class="card shadow-sm border-0 bg-light h-100">
                 <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <h5 class="fw-normal mb-3">Need Assistance?</h5>
-                    <p class="text-muted">You can apply for welfare benefits directly from your dashboard.</p>
-                    <a href="{% url 'benefit' %}" class="btn btn-primary btn-lg rounded-pill mt-auto">
-                        <i class="fas fa-hand-holding-heart me-2"></i> Request Benefit
-                    </a>
+                    <h5 class="fw-normal mb-3">Welfare Benefits</h5>
+                    <p class="text-muted">Apply for a new benefit or track the status of your existing requests.</p>
+                    <div class="btn-group mt-auto" role="group" aria-label="Benefit actions">
+                        <a href="{% url 'benefit' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i> New Request
+                        </a>
+                        <a href="{% url 'benefit_list' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-list-ul me-2"></i> View Requests
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

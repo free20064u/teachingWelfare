@@ -1,0 +1,91 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-light mb-0">Manage Benefit Requests</h3>
+    </div>
+
+    <!-- Status Filter Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'Pending' %}active{% endif %}" href="?status=Pending">Pending</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'Approved' %}active{% endif %}" href="?status=Approved">Approved</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'Denied' %}active{% endif %}" href="?status=Denied">Denied</a>
+        </li>
+    </ul>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            {% if benefit_requests %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr class="table-light">
+                            <th class="ps-3">Member</th>
+                            <th>Benefit Type</th>
+                            <th>Date Submitted</th>
+                            <th>Amount</th>
+                            <th>Document</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for benefit in benefit_requests %}
+                        <tr>
+                            <td class="ps-3 align-middle">
+                                <a href="{% url 'chairperson:member_detail' pk=benefit.member.pk %}">{{ benefit.member.get_full_name }}</a>
+                            </td>
+                            <td class="align-middle">{{ benefit.get_benefit_type_display }}</td>
+                            <td class="align-middle">{{ benefit.date_submitted|date:"M d, Y" }}</td>
+                            <td class="align-middle">
+                                {% if benefit.amount %}GH₵ {{ benefit.amount|floatformat:2|intcomma }}{% else %}N/A{% endif %}
+                            </td>
+                            <td class="align-middle">
+                                {% if benefit.supporting_document %}
+                                    <a href="{{ benefit.supporting_document.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-file-alt me-1"></i> View
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">None</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center align-middle">
+                                {% if benefit.honoured %}
+                                    <span class="badge bg-secondary">Honoured</span>
+                                {% else %}
+                                    {% if benefit.status == 'Pending' %}
+                                    <form action="{% url 'chairperson:process_benefit' pk=benefit.pk action='approve' %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                    </form>
+                                    <form action="{% url 'chairperson:process_benefit' pk=benefit.pk action='deny' %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">Deny</button>
+                                    </form>
+                                    {% else %}
+                                        <span class="badge bg-{% if benefit.status == 'Approved' %}success{% else %}danger{% endif %}">{{ benefit.status }}</span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted mb-0">No benefit requests with status "{{ status_filter }}" found.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -30,6 +30,7 @@
                         <tr class="table-light">
                             <th class="ps-3">Member</th>
                             <th>Benefit Type</th>
+                            <th>Amount</th>
                             <th>Date Submitted</th>
                             <th>Document</th>
                             <th class="text-center">Actions</th>
@@ -42,6 +43,9 @@
                                 <a href="{% url 'finance:finance_member_detail' pk=benefit.member.pk %}">{{ benefit.member.get_full_name }}</a>
                             </td>
                             <td class="align-middle">{{ benefit.get_benefit_type_display }}</td>
+                            <td class="align-middle">
+                                {% if benefit.amount %}GH₵ {{ benefit.amount|floatformat:2|intcomma }}{% else %}N/A{% endif %}
+                            </td>
                             <td class="align-middle">{{ benefit.date_submitted|date:"M d, Y" }}</td>
                             <td class="align-middle">
                                 {% if benefit.supporting_document %}
@@ -54,16 +58,16 @@
                             </td>
                             <td class="text-center align-middle">
                                 {% if benefit.status == 'Pending' %}
-                                    <form action="{% url 'finance:process_benefit' pk=benefit.pk action='approve' %}" method="post" class="d-inline">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                                    </form>
-                                    <form action="{% url 'finance:process_benefit' pk=benefit.pk action='deny' %}" method="post" class="d-inline">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-danger">Deny</button>
-                                    </form>
+                                    <button type="submit" class="btn btn-sm btn-warning"> {{benefit.status}} 
+                                    </button>                                    
+                                {% elif benefit.status == 'Approved' %}
+                                    {% if benefit.honoured %}
+                                        <span class="badge bg-secondary">Honoured</span>
+                                    {% else %}
+                                        <a href="{% url 'finance:honour_benefit' pk=benefit.pk %}" class="btn btn-sm btn-primary">Honour Request</a>
+                                    {% endif %}
                                 {% else %}
-                                    <span class="badge bg-{% if benefit.status == 'Approved' %}success{% else %}danger{% endif %}">{{ benefit.status }}</span>
+                                    <span class="badge bg-danger">{{ benefit.status }}</span>
                                 {% endif %}
                             </td>
                         </tr>

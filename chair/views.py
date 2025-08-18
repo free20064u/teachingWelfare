@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Max, Value
+from django.db.models import Sum, Max, Value, Q, Count
 from django.db.models.functions import Concat, TruncMonth
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -32,15 +32,23 @@ def chairDashboardView(request):
         payment_date__month=today.month
     ).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
 
+    # --- Benefit Metrics ---
+    honoured_benefits = Benefit.objects.filter(honoured=True)
+    total_benefit_amount = honoured_benefits.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+    honoured_benefits_count = honoured_benefits.count()
+    benefited_members_count = honoured_benefits.values('member').distinct().count()
+    # The balance difference between total funds collected and total benefits paid out.
+    balance_after_benefits = total_fund_balance - total_benefit_amount
+
     # --- Member Metrics ---
-    total_members = CustomUser.objects.filter(is_superuser=False).count()
+    total_members = CustomUser.objects.filter(is_superuser=False, is_active=True).count()
     current_month_year = today.strftime('%B %Y')
     paid_this_month_ids = Dues.objects.filter(
         payment_date__year=today.year,
         payment_date__month=today.month
     ).values_list('member_id', flat=True).distinct()
     outstanding_members = CustomUser.objects.filter(
-        is_superuser=False
+        is_superuser=False, is_active=True
     ).exclude(
         pk__in=paid_this_month_ids
     ).order_by('last_name', 'first_name')
@@ -58,9 +66,35 @@ def chairDashboardView(request):
         'outstanding_members': outstanding_members,
         'current_month_year': current_month_year,
         'pending_benefits': pending_benefits,
+        'total_benefit_amount': total_benefit_amount,
+        'honoured_benefits_count': honoured_benefits_count,
+        'benefited_members_count': benefited_members_count,
+        'balance_after_benefits': balance_after_benefits,
         'unread_announcements': unread_announcements,
     }
     return render(request, 'chair/dashboard.html', context)
+
+
+@login_required
+def membersListView(request):
+    """
+    Displays a list of all members for the chairperson.
+    """
+    query = request.GET.get('q')
+    members_list = CustomUser.objects.filter(is_superuser=False, is_active=True).order_by('first_name', 'last_name')
+
+    if query:
+        members_list = members_list.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(staff_id__icontains=query)
+        ).distinct()
+
+    context = {
+        'navbar': True,
+        'members_list': members_list,
+    }
+    return render(request, 'chair/members_list.html', context)
 
 
 @login_required
@@ -177,7 +211,8 @@ def financialReportView(request):
 
     total_fund_balance = Dues.objects.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
     yearly_total_contributions = dues_for_year.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
-    total_members = CustomUser.objects.filter(is_superuser=False).count()
+
+    total_members = CustomUser.objects.filter(is_superuser=False, is_active=True).count()
     average_contribution = (yearly_total_contributions / total_members) if total_members > 0 else Decimal('0.00')
 
     monthly_breakdown = dues_for_year.annotate(
@@ -191,14 +226,33 @@ def financialReportView(request):
         total_paid=Sum('amount')
     ).order_by('-total_paid')[:10]
 
+    # --- Benefit Metrics ---
+    benefits_for_year = Benefit.objects.filter(date_submitted__year=selected_year)
+    total_benefits = benefits_for_year.count()
+    pending_benefits = benefits_for_year.filter(status='Pending').count()
+    approved_benefits = benefits_for_year.filter(status='Approved').count()
+    denied_benefits = benefits_for_year.filter(status='Denied').count()
+    honoured_benefits = benefits_for_year.filter(honoured=True).count()
+    total_amount_honoured = benefits_for_year.filter(honoured=True).aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
+    balance_after_benefits = total_fund_balance - total_amount_honoured
+
+
     context = {
         'navbar': True,
         'selected_year': selected_year,
         'available_years': available_years,
         'total_fund_balance': total_fund_balance,
         'yearly_total_contributions': yearly_total_contributions,
+        'total_members': total_members,
         'average_contribution': average_contribution,
         'monthly_breakdown': monthly_breakdown,
         'top_contributors': top_contributors,
+        'total_benefits': total_benefits,
+        'pending_benefits': pending_benefits,
+        'approved_benefits': approved_benefits,
+        'denied_benefits': denied_benefits,
+        'honoured_benefits': honoured_benefits,
+        'total_amount_honoured': total_amount_honoured,
+        'balance_after_benefits': balance_after_benefits,
     }
     return render(request, 'chair/financial_report.html', context)

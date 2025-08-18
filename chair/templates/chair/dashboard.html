@@ -8,6 +8,78 @@
         <h3 class="fw-light">Chairperson Dashboard</h3>
     </div>
 
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Total Fund Balance</h6>
+                    <p class="card-text fs-4 fw-bold text-success mb-0">GH₵ {{ total_fund_balance|floatformat:2|intcomma }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Total Members</h6>
+                    <p class="card-text fs-4 fw-bold mb-0">{{ total_members }}</p>
+                </div>
+                <div class="card-footer bg-light">
+                     <a href="{% url 'chairperson:members_list' %}" class="text-decoration-none small">View All Members</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-subtitle mb-2 text-muted">This Month's Contributions</h6>
+                    <p class="card-text fs-4 fw-bold text-primary mb-0">GH₵ {{ monthly_total_contributions|default:0|floatformat:2|intcomma }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-subtitle mb-2 text-muted">Pending Benefits</h6>
+                    <p class="card-text fs-4 fw-bold text-danger mb-0">{{ pending_benefits|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefit Payout Overview -->
+    <div class="my-4">
+        <div class="text-center mb-3">
+            <h4 class="fw-light">Benefit Payout Overview</h4>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h6 class="card-subtitle mb-2 text-muted">Honoured Benefit Requests</h6>
+                        <p class="card-text fs-4 fw-bold mb-0">{{ honoured_benefits_count }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h6 class="card-subtitle mb-2 text-muted">Total Amount Spent</h6>
+                        <p class="card-text fs-4 fw-bold text-warning mb-0">GH₵ {{ total_benefit_amount|floatformat:2|intcomma }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <h6 class="card-subtitle mb-2 text-muted">Net Fund Balance</h6>
+                        <p class="card-text fs-4 fw-bold text-info mb-0">GH₵ {{ balance_after_benefits|floatformat:2|intcomma }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Announcements Section -->
     {% if unread_announcements %}
     <div class="col-12 mb-4">
@@ -39,28 +111,19 @@
     {% endif %}
 
     <div class="row g-4">
-        <!-- Fund Overview Card -->
+        <!-- Financial Summary & Reports -->
         <div class="col-lg-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0 fw-normal"><i class="fas fa-wallet me-2 text-primary"></i>Fund Overview</h5>
+                    <h5 class="mb-0 fw-normal"><i class="fas fa-chart-line me-2 text-primary"></i>Financial Summary</h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                        <span class="text-muted">Total Fund Balance</span>
-                        <strong class="fs-5 text-success">GH₵ {{ total_fund_balance|floatformat:2|intcomma }}</strong>
-                    </div>
                     <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
                         <span class="text-muted">This Year's Contributions</span>
                         <strong class="fs-5 text-info">GH₵ {{ yearly_total_contributions|default:0|floatformat:2|intcomma }}</strong>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                        <span class="text-muted">This Month's Contributions</span>
-                        <strong class="fs-5 text-primary">GH₵ {{ monthly_total_contributions|default:0|floatformat:2|intcomma }}</strong>
-                    </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Total Members</span>
-                        <strong class="fs-5">{{ total_members }}</strong>
+                        <p class="text-muted mb-0">A quick look at the association's financial health for the year.</p>
                     </div>
                 </div>
                 <div class="card-footer bg-light text-end">
@@ -98,9 +161,14 @@
             <div class="card shadow-sm border-warning mt-4">
                 <div class="card-header bg-warning bg-opacity-25 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-normal"><i class="fas fa-bell me-2"></i>Pending Benefit Requests</h5>
-                    {% if pending_benefits %}
-                    <span class="badge bg-danger rounded-pill">{{ pending_benefits|length }}</span>
-                    {% endif %}
+                    <a href="{% url 'chairperson:manage_benefits' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-list-ul me-2"></i>View Benefit List
+                            {% if pending_benefits %}
+                                <span class="badge bg-danger rounded-pill">
+                                {{ pending_benefits|length }}
+                                </span>
+                            {% endif %}
+                        </a>
                 </div>
                 <div class="list-group list-group-flush">
                     {% for benefit in pending_benefits %}

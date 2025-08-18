@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -12,6 +13,7 @@ class Benefit(models.Model):
     Represents a benefit claim made by a member.
     """
     BENEFIT_CHOICES = (
+        (None, 'Select a Benefit Type'),
         ('Marriage', 'Marriage'),
         ('Birth', 'Birth'),
         ('Funeral', 'Funeral'),
@@ -24,13 +26,24 @@ class Benefit(models.Model):
         ('Denied', 'Denied'),
     )
 
+    # Define standard amounts for each benefit type
+    BENEFIT_AMOUNTS = {
+        'Marriage': Decimal('500.00'),
+        'Birth': Decimal('300.00'),
+        'Funeral': Decimal('1000.00'),
+        'Accident': Decimal('700.00'),
+        'Ill-health': Decimal('700.00'),
+    }
+
     benefit_type = models.CharField(max_length=30, choices=BENEFIT_CHOICES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="The amount to be paid for this benefit.")
     detail = models.TextField()
     supporting_document = models.FileField(upload_to='supporting_documents', blank=True, null=True)
     member = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='benefits')
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     date_submitted = models.DateTimeField(default=timezone.now)
+    honoured = models.BooleanField(default=False)
     
     # Fields to track who processed the request and when
     processed_by = models.ForeignKey(
@@ -46,6 +59,8 @@ class Benefit(models.Model):
     class Meta:
         verbose_name = "Benefit"
         verbose_name_plural = "Benefits"
+
+    
 
     def __str__(self):
         """

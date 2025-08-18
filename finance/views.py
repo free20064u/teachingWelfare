@@ -16,7 +16,7 @@ from accounts.models import CustomUser
 from members.models import Benefit
 from secretary.models import Announcement
 from .models import Dues
-from .forms import DuesPaymentForm
+from .forms import DuesPaymentForm, HonourBenefitForm
 
 # Create your views here.
 @login_required
@@ -25,7 +25,7 @@ def financeDashboardView(request):
     total_fund_balance = Dues.objects.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
 
     # Count the total number of non-superuser members
-    total_members = CustomUser.objects.filter(is_superuser=False).count()
+    total_members = CustomUser.objects.filter(is_superuser=False, is_active=True).count()
 
     # Get the 5 most recent dues payments as recent activities
     recent_activities = Dues.objects.select_related('member').order_by('-payment_date')[:5]
@@ -54,7 +54,7 @@ def financeDashboardView(request):
     # Get members who have NOT paid this month, and annotate with their last payment date.
     # The related name from CustomUser to Dues is 'dues' (from member.dues.all()).
     outstanding_members = CustomUser.objects.filter(
-        is_superuser=False
+        is_superuser=False, is_active=True
     ).exclude(
         pk__in=paid_this_month_ids
     ).annotate(
@@ -130,6 +130,38 @@ def processBenefitView(request, pk, action):
 
 
 @login_required
+def honourBenefitView(request, pk):
+    """
+    Marks a benefit as honoured after confirming/entering the amount.
+    """
+    benefit = get_object_or_404(Benefit, pk=pk)
+    
+    if benefit.status != 'Approved' or benefit.honoured:
+        messages.error(request, "Only approved, un-honoured benefits can be processed.")
+        return redirect(f"{reverse('finance:manage_benefits')}?status=Approved")
+
+    if request.method == 'POST':
+        form = HonourBenefitForm(request.POST, instance=benefit)
+        if form.is_valid():
+            honoured_benefit = form.save(commit=False)
+            honoured_benefit.honoured = True
+            honoured_benefit.processed_date = timezone.now()
+            honoured_benefit.save()
+            messages.success(request, f"Benefit for {benefit.member.get_full_name()} has been marked as honoured with an amount of GH₵ {honoured_benefit.amount:,.2f}.")
+            return redirect(f"{reverse('finance:manage_benefits')}?status=Approved")
+        else:
+            messages.error(request, "Please correct the amount.")
+    else:
+        form = HonourBenefitForm(instance=benefit)
+
+    context = {
+        'navbar': True,
+        'form': form,
+        'benefit': benefit,
+    }
+    return render(request, 'finance/honour_benefit.html', context)
+
+@login_required
 def financeReportView(request):
     """
     Provides a detailed financial report with year-based filtering.
@@ -152,7 +184,7 @@ def financeReportView(request):
     # --- Key Metrics ---
     total_fund_balance = Dues.objects.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
     yearly_total_contributions = dues_for_year.aggregate(total=Sum('amount'))['total'] or Decimal('0.00')
-    total_members = CustomUser.objects.filter(is_superuser=False).count()
+    total_members = CustomUser.objects.filter(is_superuser=False, is_active=True).count()
     
     # Calculate average contribution per member for the year
     average_contribution = (yearly_total_contributions / total_members) if total_members > 0 else Decimal('0.00')
@@ -176,6 +208,9 @@ def financeReportView(request):
         total_paid=Sum('amount')
     ).order_by('-total_paid')[:10]
 
+    # Net financial position for the year
+    net_for_year = yearly_total_contributions
+
     context = {
         'navbar': True,
         'selected_year': selected_year,
@@ -185,6 +220,7 @@ def financeReportView(request):
         'average_contribution': average_contribution,
         'monthly_breakdown': monthly_breakdown,
         'top_contributors': top_contributors,
+        'net_for_year': net_for_year,
     }
     return render(request, 'finance/finance_report.html', context)
 
@@ -193,7 +229,7 @@ def financeReportView(request):
 def financeMembersListView(request):
     # Filter out superusers from the list, as they are not regular members
     # and do not have dues payment history. This prevents confusion.
-    members_list = CustomUser.objects.filter(is_superuser=False).order_by('first_name', 'last_name')
+    members_list = CustomUser.objects.filter(is_superuser=False, is_active=True).order_by('first_name', 'last_name')
 
     search_query = request.GET.get("q")
     if search_query:

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.utils import timezone
@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .forms import BenefitForm, ChildrenForm, EditProfileForm, NextOfKinForm, ParentForm, ProfilePictureForm, SpouseForm
-from .models import Children, NextOfKin, Parent, Spouse
+from .models import Benefit, Children, NextOfKin, Parent, Spouse
 from finance.models import Dues
 from secretary.models import Announcement
 
@@ -95,55 +95,119 @@ def fundDetailsView(request):
 
 
 @login_required
-def benefitView(request):
-    if request.method == 'POST':
-        form = BenefitForm(request.POST, request.FILES)
-        if form.is_valid():
-            benefit = form.save(commit=False)
-            benefit.member = request.user  # Securely assign the logged-in member
-            benefit.save()
-            messages.success(request, "Your benefit request has been submitted successfully and is now pending review.")
+def benefitView(request, pk=None):
+    """
+    Handles both the creation of a new benefit request and the updating
+    of an existing one. An existing benefit can only be edited if its
+    status is 'Pending'.
+    """
+    if pk:
+        # Editing an existing benefit
+        instance = get_object_or_404(Benefit, pk=pk, member=request.user)
+        if instance.status != 'Pending':
+            messages.error(request, "This benefit request cannot be edited as it has already been processed.")
             return redirect('benefit_list')
     else:
-        # For a GET request, create a new, empty form.
-        # The member is assigned in the POST logic, not through the form.
-        form = BenefitForm()
+        # Creating a new benefit
+        instance = None
 
+    if request.method == 'POST':
+        form = BenefitForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            benefit = form.save(commit=False)
+            if not instance:  # This is a new benefit, so assign the member
+                benefit.member = request.user
+            benefit.save()
+            messages.success(request, f"Your benefit request has been {'updated' if instance else 'submitted'} successfully.")
+            return redirect('benefit_list')
+    else:
+        form = BenefitForm(initial={'member': request.user}, instance=instance)
     context = {
         'form': form,
         'navbar': True,
+        'instance': instance,
     }
     return render(request, 'members/benefit.html', context)
 
 
 @login_required
 def benefitListView(request):
-    context = {}
+    """
+    Displays a paginated list of the logged-in member's benefit requests.
+    """
+    benefits = Benefit.objects.filter(member=request.user).order_by('-date_submitted')
+    paginator = Paginator(benefits, 10)  # Show 10 benefits per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'navbar': True,
+        'page_obj': page_obj,
+    }
     return render(request, 'members/benefitList.html', context)
 
 
 @login_required
+def benefit_editView(request, pk):
+    """
+    View to edit an existing benefit request.
+    """
+    benefit = get_object_or_404(Benefit, pk=pk, member=request.user)
+    form = BenefitForm(request.POST or None, request.FILES or None, instance=benefit)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your benefit request has been updated successfully.")
+            return redirect('benefit_list')
+    else:
+        form = BenefitForm(instance=benefit)
+    context = {
+        'form': form,
+        'navbar': True,
+        'instance': benefit,
+    }
+    return render(request, 'members/benefit.html', context)
+
+@login_required
+def benefit_deleteView(request, pk):
+    """
+    View to delete an existing benefit request.
+    """
+    benefit = get_object_or_404(Benefit, pk=pk, member=request.user)
+    
+    benefit.delete()
+    messages.success(request, "Your benefit request has been deleted successfully.")
+    return redirect('benefit_list')
+
+@login_required
 def profileView(request):
+    user = request.user
+
+    # Fetch related one-to-one objects safely.
     try:
-        spouse = Spouse.objects.get(member=request.user)
-    except:
+        spouse = Spouse.objects.get(member=user)
+    except Spouse.DoesNotExist:
         spouse = None
     
     try:
-        parent = Parent.objects.get(member=request.user)
-    except:
+        parent = Parent.objects.get(member=user)
+    except Parent.DoesNotExist:
         parent = None
 
     try:
-        next_of_kin = NextOfKin.objects.get(member=request.user)
-    except:
+        next_of_kin = NextOfKin.objects.get(member=user)
+    except NextOfKin.DoesNotExist:
         next_of_kin = None
 
+    # Fetch related many-to-one objects.
+    children = Children.objects.filter(member=user)
+
     context = {
+        'navbar': True,
         'spouse': spouse,
-        'children':Children.objects.filter(member=request.user),
-        'parent':parent,
-        'next_of_kin':next_of_kin,
+        'children': children,
+        'parent': parent,
+        'next_of_kin': next_of_kin,
     }
     
     return render(request, 'members/profile.html', context)
