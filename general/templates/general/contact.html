@@ -6,66 +6,46 @@
 <div class="container my-5">
 
     <!-- Hero Section -->
-    <div class="p-5 text-center bg-light rounded-3 mb-5 shadow-sm">
-        <h1 class="display-4 fw-bold">Get in Touch</h1>
+    <div class="p-5 text-center bg-primary text-white rounded-3 mb-5 shadow-sm">
+        <h1 class="display-4 fw-bold">Contact Us</h1>
         <p class="lead col-lg-8 mx-auto">
-            We're here to help and answer any question you might have. We look forward to hearing from you.
+            We'd love to hear from you! Reach out to us with any questions or concerns.
         </p>
     </div>
 
-    <!-- Contact Methods Grid -->
-    <div class="row g-4 text-center">
-        <!-- Email -->
-        <div class="col-lg-4 col-md-6">
+    <!-- Contact Form and Map -->
+    <div class="row g-4">
+        <div class="col-lg-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body p-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white fs-2 rounded-circle mb-3" style="width: 60px; height: 60px;">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h2 class="fs-4 fw-bold">Email Us</h2>
-                    <p class="mb-1">For general inquiries, support, or feedback, please send us an email.</p>
-                    <a href="mailto:contact@teachingwelfare.org" class="text-decoration-none">contact@teachingwelfare.org</a>
+                    <h2 class="fs-4 fw-bold text-center text-primary mb-4">Send us a Message</h2>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Your message here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <!-- Phone -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body p-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white fs-2 rounded-circle mb-3" style="width: 60px; height: 60px;">
-                        <i class="fas fa-phone"></i>
+                    <h2 class="fs-4 fw-bold text-center text-primary mb-4">Our Location</h2>
+                    <div id="map" style="height: 400px;">
+                        <!-- Google Maps iframe can be embedded here -->
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.23363339325!2d-0.198424685228694!3d5.60371689598594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9b70a9b5b3a7%3A0x40f8a4b3b4c3a4b!2sAccra%2C%20Ghana!5e0!3m2!1sen!2sus!4v1630500000000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                     </div>
-                    <h2 class="fs-4 fw-bold">Call Us</h2>
-                    <p class="mb-1">Speak with a representative during our office hours (Mon-Fri, 9am-5pm).</p>
-                    <a href="tel:+1234567890" class="text-decoration-none">+1 (234) 567-890</a>
                 </div>
-            </div>
-        </div>
-
-        <!-- Office Location -->
-        <div class="col-lg-4 col-md-12">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white fs-2 rounded-circle mb-3" style="width: 60px; height: 60px;">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h2 class="fs-4 fw-bold">Visit Us</h2>
-                    <p class="mb-1">Our office is open for in-person visits. Please schedule an appointment.</p>
-                    <p class="mb-0">123 Education Lane, Knowledge City, 45678</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Map Section -->
-    <div class="mt-5 pt-4">
-        <h2 class="text-center mb-4 fw-bold">Our Location</h2>
-        <div class="card shadow-sm">
-            <div class="card-body p-2">
-                <!-- Embedded Google Map -->
-                <!-- TODO: Replace the 'src' attribute with your actual Google Maps embed link -->
-                <iframe src="https://maps.google.com/maps?width=600&height=400&hl=en&q=wbm%20zion&t=&z=14&ie=UTF8&iwloc=B&output=embed" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" class="rounded"></iframe>
             </div>
         </div>
     </div>

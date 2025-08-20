@@ -17,6 +17,7 @@ from members.models import Benefit
 from secretary.models import Announcement
 from .models import Dues
 from .forms import DuesPaymentForm, HonourBenefitForm
+from utils.messaging import send_sms
 
 # Create your views here.
 @login_required
@@ -148,6 +149,13 @@ def honourBenefitView(request, pk):
             honoured_benefit.processed_date = timezone.now()
             honoured_benefit.save()
             messages.success(request, f"Benefit for {benefit.member.get_full_name()} has been marked as honoured with an amount of GH₵ {honoured_benefit.amount:,.2f}.")
+
+            # Send SMS notification
+            member = honoured_benefit.member
+            if member.phone_number:
+                message = f"Dear {member.get_full_name()}, your benefit of GHC{honoured_benefit.amount} has been honoured. Thank you."
+                send_sms(member.phone_number, message)
+
             return redirect(f"{reverse('finance:manage_benefits')}?status=Approved")
         else:
             messages.error(request, "Please correct the amount.")

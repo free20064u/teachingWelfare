@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load humanize %}
+{% load static %}
 
 {% block title %}{{ member.get_full_name }} | Chairperson{% endblock %}
 
@@ -7,11 +8,20 @@
 <div class="container mt-4 mb-4">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Member Details</h2>
+            <h2 class="mb-0 text-primary">Member Details</h2>
             <a href="{% url 'chairperson:chairperson_dashboard' %}" class="btn btn-sm btn-outline-secondary">Back to Dashboard</a>
         </div>
         <div class="card-body">
-            <h3 class="card-title">{{ member.get_full_name }}</h3>
+            <div class="d-flex align-items-center mb-3">
+                {% if member.profile_picture %}
+                    <img src="{{ member.profile_picture.url }}" alt="{{ member.get_full_name }}" class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'base/images/wbm-logo4.png' %}" alt="Default profile picture" class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                {% endif %}
+                <div>
+                    <h3 class="card-title mb-0">{{ member.get_full_name }}</h3>
+                </div>
+            </div>
             <hr>
             <div class="row">
                 <div class="col-md-6">

@@ -2,33 +2,374 @@
 
 {% block title %}Our Constitution{% endblock %}
 
+{% block extra_head %}
+<style>
+    .accordion-button:not(.collapsed) {
+        color: #fff;
+        background-color: #007bff;
+    }
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container my-5">
 
     <!-- Hero Section -->
-    <div class="p-5 text-center bg-light rounded-3 mb-5 shadow-sm">
-        <h1 class="display-4 fw-bold">Association Constitution</h1>
+    <div class="p-5 text-center bg-primary text-white rounded-3 mb-5 shadow-sm">
+        <h1 class="display-4 fw-bold">AMEZSS TEACHING STAFF WELFARE ASSOCIATION</h1>
         <p class="lead col-lg-8 mx-auto">
             The foundational principles and regulations governing our association.
         </p>
     </div>
 
     <!-- Constitution Content -->
-    <div class="card shadow-sm">
-        <div class="card-body p-4 p-md-5">
-            <h2 class="card-title mb-4">Preamble</h2>
-            <p>We, the members of the Teaching Welfare Association, in order to form a more perfect union, establish justice, ensure domestic tranquility, provide for the common welfare, and secure the blessings of liberty to ourselves and our posterity, do ordain and establish this Constitution for the Teaching Welfare Association.</p>
-            <hr class="my-4">
+    <div class="accordion" id="constitutionAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="preambleHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#preambleCollapse" aria-expanded="true" aria-controls="preambleCollapse">
+                    Preamble
+                </button>
+            </h2>
+            <div id="preambleCollapse" class="accordion-collapse collapse show" aria-labelledby="preambleHeading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <p>We the teachers of W.B M Zion Senior High School. In the interest of solidarity and to provide for our common good and welfare do hereby adopt, enact and give to ourselves this constitution in accordance with which all affairs of the association shall be governed</p>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article1Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article1Collapse" aria-expanded="false" aria-controls="article1Collapse">
+                    ARTICLE 1: NAME
+                </button>
+            </h2>
+            <div id="article1Collapse" class="accordion-collapse collapse" aria-labelledby="article1Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <p>This association shall be known as the AMEZSS Teaching Staff Welfare,hereinafter referred to as The Welfare</p>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article2Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article2Collapse" aria-expanded="false" aria-controls="article2Collapse">
+                    ARTICLE 2: AIMS AND OBJECTIVES
+                </button>
+            </h2>
+            <div id="article2Collapse" class="accordion-collapse collapse" aria-labelledby="article2Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <p>The aims and objectives of the association shall be:</p>
+                    <ol type="a">
+                        <li>To seek the interest and welfare of the teaching staff of W.B.M. Zion Senior High School.</li>
+                        <li>To promote solidarity and cooperation among members of staff.</li>
+                        <li>To provide a means for the expression oI the collective opinion of teachers in matters regarding the welfare of the teacher and to participate in decision making.</li>
+                        <li>To create a forum for members to socialize,share ideas and experiences</li>
+                        <li>To take such measures as may be deemed necessary for the progress of the association including.Investment in Fixed deposits. Treasury bill and othey financial instruments.</li>
+                        <li>Granting loans to members through a special purpose vehicle to be established by the Executive committee</li>
+                        <li>The provision in 2(e) above is subject to general assembly approval.</li>
+                        <li>To establish and strengthen relations with teaching staff welfare associations in other Senior High Schools</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article3Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article3Collapse" aria-expanded="false" aria-controls="article3Collapse">
+                    ARTICLE 3:  MEMBERSHIP
+                </button>
+            </h2>
+            <div id="article3Collapse" class="accordion-collapse collapse" aria-labelledby="article3Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>All members of the teaching staff of W B.M. Zion Senior High School shall be eligible for membership of the welfare</li>
+                        <li>Each member is required to fill a membership registration form and shall be given a membership card in which monthly subscriptions will be recorded</li>
+                        <li>A member shall pay a monthly due of Ghe1000 or any such amount as may be decided at the Annual General Meeting (A.G.M) of the welfare</li>
+                        <li>A member shall be due for benefits after paying the monthly subscription as determined under 3(c) for at least three (3) consecutive months.</li>
+                        <li>A member of good financial standing is entitledto all rights and benefits including the right to vote and to hold office.</li>
+                        <li>In addition to the monthly subscription as mentioned in clause 3(b).the association may request of members to make ad-hoc contributions as circumstances may require.</li>
+                        <li>A member who defaults in the payment of subscription for three (3) months shall be cautloned and made to pay a penalty of thiree (3) times the arrears accrued before benefts are awarded to such a member.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article4Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article4Collapse" aria-expanded="false" aria-controls="article4Collapse">
+                    ARTICLE 4: WITHDRAWAL OF MEMBERSHIP
+                </button>
+            </h2>
+            <div id="article4Collapse" class="accordion-collapse collapse" aria-labelledby="article4Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <p>The following situations will terminate membership:</p>
+                    <ol type="a">
+                        <li>Transfer or retirement.</li>
+                        <li>Upon death of a member.</li>
+                        <li>If a member defaults in payment of subscription for at least four (4) months.</li>
+                        <li>If a member is found to have behaved in a manner that adversely affects the dignity of the association</li>
+                        <li>Voluntary resignation by informing the secretary in writIng.</li>
+                    </ol>
+                    <p>An aggrieved member as determined under 4(a)(iv) mayappeal to the Executive committee within 30 days.</p>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article5Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article5Collapse" aria-expanded="false" aria-controls="article5Collapse">
+                    ARTICLE 5: EXECUTIVE COMMITTEE
+                </button>
+            </h2>
+            <div id="article5Collapse" class="accordion-collapse collapse" aria-labelledby="article5Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>The Executive committee of the welfare shall consist of seven (7) members who shall beelected from members of the welfare at a general meeting.</li>
+                        <li>The committee shall comprise:</li>
+                        <ol type="i">
+                            <li>Chairperson</li>
+                            <li>Vice-chairperson</li>
+                            <li>Secretary</li>
+                            <li>Treasurer</li>
+                            <li>Financial secretary</li>
+                            <li>Organizer</li>
+                            <li>Assistant organizer</li>
+                        </ol>
+                        <li>The committee shall serve a two-year term of office after which an Executive member is eligible for re-election for a second consecutive term for the same or different position.</li>
+                        <li>After two consecutive terms of office,an Executive member shall relinquish his position for others to vie for.</li>
+                        <li>Such a member as determined in clause 5(d) will become eligible to contest another election after a full term of two years has passed.</li>
+                        <li>An Executive member can be removed from office if a vote of no confidence is passed andapproved by a majority of two-thirds (2/3) of members at the meeting when the officer is found to have engaged in a gross misconduct.</li>
+                        <li>If the position of an Executive member becomes vacant by reason of incapacitation,resignation.impeachment and removal from office etc., a by-election shall be called to fill the vacancy within two months except in the case of the Chairperson where the Vice-Chairperson assumes his/her role to complete the unexpired term of the Chairperson.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article6Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article6Collapse" aria-expanded="false" aria-controls="article6Collapse">
+                    ARTICLE 6: FUNCTIONS OF THE EXECUTIVE COMMITTEE
+                </button>
+            </h2>
+            <div id="article6Collapse" class="accordion-collapse collapse" aria-labelledby="article6Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <h4>Chairperson</h4>
+                    <ol type="a">
+                        <li>Shall convene and preside over all meetings of the association. In his/her absence,the Vice-Chairperson shall assume this duty.</li>
+                        <li>Shall be the principal signatory to the account of the welfare and sign all other documents on behalf of the association.</li>
+                        <li>Shall see to the implementation of Executive committee decisions and shall be concerned with any other business as may be directed to him/her by the general assembly.</li>
+                        <li>Shall be the chief spokesperson of the association</li>
+                        <li>Shall in consultation with the Executive committee nominate members of various committees subject to the approval of the general assembly.</li>
+                        <li>Shall be the custodian of all properties of the association.</li>
+                    </ol>
 
-            <h3 class="mt-5">Article I: Name and Purpose</h3>
-            <p><strong>Section 1:</strong> The name of this organization shall be the Teaching Welfare Association.</p>
-            <p><strong>Section 2:</strong> The purpose of this association shall be to promote the welfare of its members, foster a spirit of unity and cooperation, and to provide mutual assistance in times of need. <em>[Full text to be added here...]</em></p>
+                    <h4>Vice-Chairperson</h4>
+                    <ol type="a">
+                        <li>Shall assist the Charperson in the performance of his her dutles.</li>
+                        <li>Shall act in the absence of the Chairperson and when so acting,shall be vested with all the powers of the Chairperson.</li>
+                        <li>Shall perform any other dutles as may be assigned to him/her by the Chairperson.</li>
+                    </ol>
 
-            <h3 class="mt-5">Article II: Membership</h3>
-            <p><strong>Section 1:</strong> Membership shall be open to all full-time and part-time educators within the designated region who subscribe to the purposes and policies of the association. <em>[Full text to be added here...]</em></p>
+                    <h4>Secretary</h4>
+                    <ol type="a">
+                        <li>Shall with the authority of the Chairperson issue notices of all general meetings not less than forty-eight (48) hours before the scheduled meeting.</li>
+                        <li>Shall keep and maintain true and accurate minutes and records of all proceedings of meetings.</li>
+                        <li>Shall in consultation with the Chairperson handle all correspondence of the association.</li>
+                        <li>Shall compile and maintain an official list of all members of the association.</li>
+                        <li>Shall perform any other dutles as may be assigned to him/her by the Chairperson.</li>
+                    </ol>
 
-            <h3 class="mt-5">Article III: Governance & Amendments</h3>
-            <p>The governing body and rules for amending this constitution are detailed in the full document, which is available to all members upon request. <em>[Full text to be added here...]</em></p>
+                    <h4>Financial Secretary</h4>
+                    <ol type="a">
+                        <li>Shall collect all monthly subscriptions and other revenues on behalf of the associaton.</li>
+                        <li>Shall keep and maintain proper books of accounts of. all dues and any other income accruing to the association and shall submit same for audit</li>
+                        <li>Shall in collaboration with the treasurer prepare and present audited annual financial statements to the general assembly</li>
+                        <li>Shall be a signatory to the account of the welfare</li>
+                        <li>ShaIl have custody of all the association's cheque hooks and cash books.</li>
+                        <li>Shall perform any other duties as may be assigned by the Executive comminee.</li>
+                    </ol>
+
+                    <h4>Treasurer</h4>
+                    <ol type="a">
+                        <li>Shall lodge all monies belonging to the welfare with the bank and obtain recelpts for all such transactions</li>
+                        <li>Shall in collaboration with the firnanclal secretary prepare financial statements for audit purposes and for presentation to the general assembly at the end of the financial year and at any other time upon request by two-thirds(2/3) majority of the general assembly within seven (7)days'notice.</li>
+                        <li>Shall be a signatory to the account of the welfare.</li>
+                        <li>Shall perform any other duties as may be assigned by the Executive committee.</li>
+                    </ol>
+
+                    <h4>Organizer</h4>
+                    <ol type="a">
+                        <li>Shall be responsible for effective organization of all meetings and activities of the association.</li>
+                        <li>Shall in collaboration with school management and Executive committee make transport arrangements on behalf of members.</li>
+                        <li>Shall be in charge of the procurement of logisties and other materials required for the operations of the association</li>
+                        <li>Shall perform any other duties as may be assigned by the Executive committee.</li>
+                    </ol>
+
+                    <h4>Assistant Organizer</h4>
+                    <ol type="a">
+                        <li>Shall assist the organizer in the performance of his duties and shall act in the absence of the organizer.</li>
+                        <li>Shall perform any other dutles as may be assigned by the Executive committee.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article7Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article7Collapse" aria-expanded="false" aria-controls="article7Collapse">
+                    ARTICLE 7: MEETINGS AND QUORUM
+                </button>
+            </h2>
+            <div id="article7Collapse" class="accordion-collapse collapse" aria-labelledby="article7Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>The Executive committee shall meet at least twice every semester</li>
+                        <li>Annual General Meetings shall be held where situational reports and statement of accounts shall be presented to members.</li>
+                        <li>Emergency meetings shall be called as and when the need arises.</li>
+                        <li>Four (4) members of the Executive committee and one-third (1/3) of the welfare membership form a quorum for the commencement of Executive and general meetings respectively</li>
+                        <li>Decisions of all meetings of the association shall be arrived at by a simple majority.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article8Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article8Collapse" aria-expanded="false" aria-controls="article8Collapse">
+                    ARTICLE 8: FINANCE AND AUDIT
+                </button>
+            </h2>
+            <div id="article8Collapse" class="accordion-collapse collapse" aria-labelledby="article8Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>The welfare shal obtain funds from:</li>
+                        <ol type="i">
+                            <li>Members'subscription and contributions</li>
+                            <li>Fines and penalties</li>
+                            <li>Good will from well wishers</li>
+                            <li>Other lawful sources Including returns on Investments.</li>
+                        </ol>
+                        <li>The Bankers of the Association shall be GCB Bank limited.</li>
+                        <li>The account of the welfare shall be operated by the Chairperson,Treasurer and Financial Secretary</li>
+                        <li>The signatures of the Chairperson and the Treasurer or Financial secretary shall be valld for the purpose of withdrawal.</li>
+                        <li>Funds and property of the welfare shall be vested in thename of the association and such fundsand property shall be under the control and at the disposal of the Executive committee for the respective purpose to which the varlous funds are devoted.</li>
+                        <li>The financial year shall begin and end with the academic year in accordance with GES calendar.</li>
+                        <li>The general assembly shall appoint three (3) auditors to audit and repor annually on the accounts of the welfare.</li>
+                        <li>The term of office of the auditors ends with that of the executive committee</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article9Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article9Collapse" aria-expanded="false" aria-controls="article9Collapse">
+                    ARTICLE 9: BENEFITS
+                </button>
+            </h2>
+            <div id="article9Collapse" class="accordion-collapse collapse" aria-labelledby="article9Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <h4>9.1. MARRIAGE</h4>
+                    <ol type="a">
+                        <li>A member shall be entitled to benefit for only one marriage.</li>
+                        <li>The association shall attend marriage ceremonies to which members have been formally invited.</li>
+                        <li>Invitation to such events should reach the Chairperson at least one (1) month clear to the event.</li>
+                        <li>A member shall receive an amount of GHe500.00 as marriage benefit.</li>
+                        <li>If the couple are members of the welfare, an amount of GHe1000.00 shall be given to them as benefit.</li>
+                    </ol>
+
+                    <h4>9.2. CHILD BIRTH</h4>
+                    <ol type="a">
+                        <li>A member stands to benefit for only one child birth.</li>
+                        <li>A member shall receive an amount of GHe200,00 as benefit.</li>
+                        <li>If the couple are members of the welfare, an amount of GHe400.00 shall be given to them as benefit.</li>
+                    </ol>
+
+                    <h4>9.3. ILL-HEALTH</h4>
+                    <ol type="a">
+                        <li>The Executive committee shall assess the severity of each case and award benefits accordingly.</li>
+                        <li>Cases such as a week's hospitalization,accident,surgeries etc,shall be considered.</li>
+                        <li>A member shall recelve a minimum of GHe200.00 subject to the provision in clause (a).</li>
+                    </ol>
+
+                    <h4>9.4. BEREAVEMENT</h4>
+                    <ol type="a">
+                        <li>Funerals that shall concern the assoclation Include:</li>
+                        <ol type="i">
+                            <li>Member</li>
+                            <li>Legitimate spouse of member</li>
+                            <li>Father or Mother of member</li>
+                            <li>Children of member</li>
+                        </ol>
+                        <li>A bereaved member or the family of a deceased member shall write to formally inform the association in good time to allow for proper planning.</li>
+                        <li>The following benefits shall apply in the events as determined under clause (a):</li>
+                        <ol type="i">
+                            <li>Member - GHe1000.00</li>
+                            <li>Legitimate spouse of member - GHe1000.00</li>
+                            <li>Father or Mother of member - GHe700.00</li>
+                            <li>Child of a member - GH2500.00</li>
+                        </ol>
+                        <li>In a situation where the surviving spouse of a deceased member is also a member of the welfare.a benefit of GHe 1000.00 shall be given to the surviving spouse and another GHe1000.00 given to the next of kin of the deceased member.</li>
+                        <li>The welfare shall make a donation of GHe50 to the bereaved family in addition to the benefits as determIned under c()(i)(ii)(iv) and d.</li>
+                    </ol>
+
+                    <h4>9.5. TRANSFER</h4>
+                    <p>The following beneflts shall apply to members going on transfers:</p>
+                    <ol type="a">
+                        <li>A member who has never benefited shall receive 70% of dues accrued over period.</li>
+                        <li>A member who has ever benefited shall recelve 35% of dues accrued over period.</li>
+                        <li>The Executive committee shall decide on the package for school management who go on transfer after less than three (3) years of contribution to the welfare.</li>
+                    </ol>
+
+                    <h4>9.6. RETIREMENT</h4>
+                    <p>The following benefits shall apply to members going on retirement:</p>
+                    <ol type="a">
+                        <li>A member shall recelve GHe800.00 after contributing for three (3) to five (5) years without benefit.</li>
+                        <li>A member shall receive GHe1000.00 after contributing for more than five(5)years without benefit</li>
+                        <li>A member who has contributed for between three (3) years to five (5) years and has ever benefited shall receive an amount of GHe600 00.</li>
+                        <li>A member who has contributed for more than five (5) years and has ever benefited shall receive an amount of GHe800.00.</li>
+                        <li>The Executive committee shall decide on the package for school management and members who retire after less than three (3) years of contribution to the welfare.</li>
+                        <li>Each member shall be required to make a contribution of GHe20.00 to be used to organize a send-off party and to purchase a parting gift for the retiree.</li>
+                    </ol>
+
+                    <h4>9.7. ANNUAL GET-TOGETHER</h4>
+                    <ol type="a">
+                        <li>The Executive committee shall plan and organize a befitting get-together at the end of the year for members.</li>
+                        <li>The provision as captured in clause (a) is subject to availability of funds.</li>
+                    </ol>
+
+                    <h4>9.8.EX-GRATIA</h4>
+                    <ol type="a">
+                        <li>Members of the Executive committee and Auditors of the welfare accounts shall recelve emoluments at the end of their term of office.</li>
+                        <li>The end of term emoluments as mentioned in clause (a) above shall be determined and approved by the general assembly at a general meeting of the association.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article10Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article10Collapse" aria-expanded="false" aria-controls="article10Collapse">
+                    ARTICLE 10: AMENDMENTS
+                </button>
+            </h2>
+            <div id="article10Collapse" class="accordion-collapse collapse" aria-labelledby="article10Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>Amendment to any part of this constitution can be initiated by any member of good financial standing</li>
+                        <li>Such a member in clause (a) shall write to the secretary who shall table same for discussion and approval by a majority number of not less than two-thirds (2/3) of members present at a general meeting summoned for that purpose.</li>
+                        <li>At least thrce (3) weeks' notice of such a meeting as captured in clause (b)along with the proposed amendment(s) must be brought tothe attention of members.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="article11Heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#article11Collapse" aria-expanded="false" aria-controls="article11Collapse">
+                    ARTICLE 11: DISSOLUTION
+                </button>
+            </h2>
+            <div id="article11Collapse" class="accordion-collapse collapse" aria-labelledby="article11Heading" data-bs-parent="#constitutionAccordion">
+                <div class="accordion-body">
+                    <ol type="a">
+                        <li>The association shall not be dissolved and its funds divided except with the consent of not less than two-thirds (2/3) of members of the association voting at a meeting specially summoned for this purpose</li>
+                        <li>In the event of the association being dissolved as provided in 11(a) above.all debts and liabilies legally incurred on behalf of the association shall befully settled and the remalning funds divided up among the membership in equal proportions.</li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </div>
 

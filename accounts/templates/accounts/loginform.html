@@ -8,23 +8,19 @@
     <div class="text-center">
        <img src= {% static "base/images/wbm-logo4.png" %} alt="logo" width=200>
       <h1 class="title">Login</h1>
-      
     </div>
-    <form class="text-center my-4" method="post">
+    <form class="text-center col-sm-4 mx-auto" method="post">
       {% csrf_token %}
       <input type="email" class="form-control mb-4" name="email" id="" placeholder="Email">
       <input type="password" class="form-control mb-4" name="password" id="" placeholder="password">
       <div>
-        <button class="btn btn-primary btn-lg rounded-pill col-10 col-sm-4 mb-2" type="submit">Login</button>
+        <button class="btn btn-primary btn-lg rounded-pill col-10 col-sm- mb-2" type="submit">Login</button>
       </div>
     </form>
     <div class="text-center">
       <a href="http://" class="text-decoration-none text-muted" >Forgot password</a>
       <p class="my-3 text-center">&copy; {{ year|default:2024 }} Teaching Welfare <br>designed by alphy</br></p>
     </div>
-    
-    
-    
   </div>
 </div>
 {% endblock %}
